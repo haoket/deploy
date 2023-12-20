@@ -1,0 +1,81 @@
+{
+  "intents": [
+    {
+      "tag": "Lời chào",
+      "patterns": [
+        "Hi",
+        "Hello",
+        "Xin chào",
+        "Chào",
+        "Bạn khỏe không",
+        "Có ai ở đây không"
+      ],
+      "responses": [
+        "Chào bạn",
+        "Chào bạn, cảm ơn bạn đã ghé cửa hàng chúng tôi",
+        "Chào, tôi có thể giúp gì cho bạn"
+      ]
+    },
+    {
+      "tag": "tạm biệt",
+      "patterns": [
+        "Bye",
+        "Tạm biệt"
+      ],
+      "responses": [
+        "Hẹn gặp lại, cảm ơn bạn đã ghé thăm",
+        "Chúc bạn một ngày tốt đẹp",
+        "Tạm biệt, hãy quay lại với chúng tôi sớm nhé."
+      ]
+    },
+    {
+      "tag": "cảm ơn",
+      "patterns": [
+        "Cảm ơn",
+        "Cảm ơn bạn",
+        "Cảm ơn vì đã giúp",
+        "Cảm ơn rất nhiều"
+      ],
+      "responses": [
+        "Hân hạnh được giúp đỡ bạn",
+        "Cảm ơn, tôi sẽ trả lời bạn bất kì lúc nào bạn cần"
+      ]
+    },
+    {
+      "tag": "mặt hàng",
+      "patterns": [
+        "Cửa hàng có những mặt hàng nào",
+        "Ở đây có những gì",
+        "Bạn bán gì"
+      ],
+      "responses": [
+        "Cửa hàng chúng tôi có các loại mỹ phẩm, son môi,... mời bạn chọn trang Cửa hàng để lựa chọn mặt hàng của chúng tôi",
+        "Chúng tôi có các loại mỹ phẩm làm đẹp như mặt nạ, phấn, son môi"
+      ]
+    },
+    {
+      "tag": "thanh toán",
+      "patterns": [
+        "Tôi có thể thanh toán theo các cách nào ",
+        "Bạn có chấp nhận ship cod không",
+        "Có loại hình thanh toán online nào không"
+      ],
+      "responses": [
+        "Chúng tôi chấp nhận thanh toán COD và bằng Paypal",
+        "Chúng tôi có thể thanh toán bằng Paypal hoặc thanh toán khi nhận hàng"
+      ]
+    },
+    {
+      "tag": "giao hàng",
+      "patterns": [
+        "Thời gian giao bao lâu?",
+        "Bao lâu shiper tới?",
+        "Khi nào tôi lấy được hàng?"
+      ],
+      "responses": [
+        "Giao hàng có thể mất từ 2-4 ngày",
+        "Bạn có thể nhận hàng từ 2-4 ngày"
+      ]
+    }
+  ]
+}
