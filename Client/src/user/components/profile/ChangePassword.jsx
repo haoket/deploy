@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react'
-import './ChangePassword.css'
+import './style.css'
 import { Context } from '../../../context/Context';
 import { apiDomain } from '../../../utils/utilsDomain';
 import axios from 'axios';
