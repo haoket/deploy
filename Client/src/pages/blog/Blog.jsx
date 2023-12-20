@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import './blog.css';
+import './Blog.css';
 import { getBlog } from '../../utils/apiCalls';
 import { Link } from 'react-router-dom';
 import { apiDomain } from '../../utils/utilsDomain';
