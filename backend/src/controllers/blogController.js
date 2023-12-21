@@ -20,7 +20,7 @@ export const createBlog = async (req, res) => {
 };
 
 export const getBlog = (req, res) => {
-    const query = 'SELECT * FROM Blog ORDER BY date_create DESC';
+    const query = 'SELECT * FROM blog ORDER BY date_create DESC';
     dbConnection.query(query, (error, results) => {
         if (error) {
             console.error('Lỗi khi lấy thông tin blog:', error);

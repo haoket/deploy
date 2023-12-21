@@ -47,7 +47,7 @@ export const createOrderItem = async (req, res) => {
 export const getOrders = async (req, res) => {
   try {
     const pool = await sql.connect(config.sql);
-    const result = await pool.request().query('SELECT * FROM Orders');
+    const result = await pool.request().query('SELECT * FROM orders');
     res.status(200).json(result.recordset);
   } catch (error) {
     res.status(500).json({ error: `An error occurred while retrieving orders... ${error.message}` });
@@ -64,7 +64,7 @@ export const getOrderById = async (req, res) => {
     const pool = await sql.connect(config.sql);
     const result = await pool.request()
       .input('orderId', sql.Int, orderId)
-      .query('SELECT * FROM Orders WHERE ID = @orderId');
+      .query('SELECT * FROM orders WHERE ID = @orderId');
 
     if (!result.recordset[0]) {
       res.status(404).json({ message: 'Order not found' });
@@ -269,7 +269,7 @@ export const updateOrder = async (req, res) => {
       .input('CustomerID', sql.Int, CustomerID)
       .input('OrderDate', sql.Date, OrderDate)
       .input('TotalAmount', sql.Decimal, TotalAmount)
-      .query('UPDATE Orders SET CustomerID = @CustomerID, OrderDate = @OrderDate, TotalAmount = @TotalAmount WHERE ID = @orderId');
+      .query('UPDATE orders SET CustomerID = @CustomerID, OrderDate = @OrderDate, TotalAmount = @TotalAmount WHERE ID = @orderId');
 
     res.status(200).json({ message: 'Order updated successfully' });
   } catch (error) {
@@ -303,7 +303,7 @@ export const deleteOrder = async (req, res) => {
     const pool = await sql.connect(config.sql);
     const result = await pool.request()
       .input('orderId', sql.Int, orderId)
-      .query('DELETE FROM Orders WHERE ID = @orderId');
+      .query('DELETE FROM orders WHERE ID = @orderId');
 
     if (result.rowsAffected[0] === 0) {
       res.status(404).json({ message: 'Order not found' });

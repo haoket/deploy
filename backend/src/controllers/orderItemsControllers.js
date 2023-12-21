@@ -14,11 +14,11 @@ export const getOrderItems = async (req, res) => {
     oi.Quantity AS Quantity,
     oi.Price AS Price
 FROM
-    OrderItems oi
+    orderitems oi
 JOIN
-    Users u ON oi.ID = u.id
+    users u ON oi.ID = u.id
 JOIN
-    Products p ON oi.ProductID = p.ID;
+    products p ON oi.ProductID = p.ID;
     `);
     res.status(200).json(result.recordset);
   } catch (error) {
@@ -41,7 +41,7 @@ export const getOrderItemById = async (req, res) => {
     const result = await pool
       .request()
       .input("orderItemId", sql.Int, orderItemId)
-      .query("SELECT * FROM OrderItems WHERE ID = @orderItemId");
+      .query("SELECT * FROM orderitems WHERE ID = @orderItemId");
 
     if (!result.recordset[0]) {
       res.status(404).json({ message: "Order item not found" });
@@ -72,7 +72,7 @@ export const createOrderItem = async (req, res) => {
       .input("Quantity", sql.Int, Quantity)
       .input("Price", sql.Decimal, Price)
       .query(
-        "INSERT INTO OrderItems (OrderID, ProductID, Quantity, Price) VALUES (@OrderID, @ProductID, @Quantity, @Price)"
+        "INSERT INTO orderitems (OrderID, ProductID, Quantity, Price) VALUES (@OrderID, @ProductID, @Quantity, @Price)"
       );
 
     res.status(201).json({ message: "Order item created successfully" });
@@ -102,7 +102,7 @@ export const updateOrderItem = async (req, res) => {
       .input("Quantity", sql.Int, Quantity)
       .input("Price", sql.Decimal, Price)
       .query(
-        "UPDATE OrderItems SET OrderID = @OrderID, ProductID = @ProductID, Quantity = @Quantity, Price = @Price WHERE ID = @orderItemId"
+        "UPDATE orderitems SET OrderID = @OrderID, ProductID = @ProductID, Quantity = @Quantity, Price = @Price WHERE ID = @orderItemId"
       );
 
     res.status(200).json({ message: "Order item updated successfully" });
@@ -125,7 +125,7 @@ export const deleteOrderItem = async (req, res) => {
     const result = await pool
       .request()
       .input("orderItemId", sql.Int, orderItemId)
-      .query("DELETE FROM OrderItems WHERE ID = @orderItemId");
+      .query("DELETE FROM orderitems WHERE ID = @orderItemId");
 
     if (result.rowsAffected[0] === 0) {
       res.status(404).json({ message: "Order item not found" });

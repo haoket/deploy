@@ -11,7 +11,7 @@ export const createProduct = (req, res) => {
   const currentDate = new Date();
   const imageLinkJSON = JSON.stringify(ImageLink);
 
-  const query = 'INSERT INTO Products (Name, Description, Price, Quantity, Category, Stars, ImageLink, date_create) VALUES (?, ?, ?,?, ?, ?, ?,?)';
+  const query = 'INSERT INTO products (Name, Description, Price, Quantity, Category, Stars, ImageLink, date_create) VALUES (?, ?, ?,?, ?, ?, ?,?)';
 
   dbConnection.query(query, [Name, Description, Price, Quantity, Category, Stars, imageLinkJSON, currentDate], (error) => {
     if (error) {
@@ -31,7 +31,7 @@ export const updateProduct = (req, res) => {
   const productId = req.params.id;
   const { Name, Description, Price, Quantity, Category, ImageLink } = req.body;
   const imageLinkJSON = JSON.stringify(ImageLink);
-  const query = 'UPDATE Products SET Name = ?, Description = ?, Price = ?, Quantity = ?, Category = ?, ImageLink = ? WHERE ID = ?';
+  const query = 'UPDATE products SET Name = ?, Description = ?, Price = ?, Quantity = ?, Category = ?, ImageLink = ? WHERE ID = ?';
 
   dbConnection.query(query, [Name, Description, Price, Quantity, Category, imageLinkJSON, productId], (error) => {
     if (error) {
@@ -48,7 +48,7 @@ export const updateProduct = (req, res) => {
 
 export const getProductById = (req, res) => {
   const productId = req.params.id;
-  const query = 'SELECT * FROM Products WHERE ID = ?';
+  const query = 'SELECT * FROM products WHERE ID = ?';
   dbConnection.query(query, [productId], (error, results) => {
     if (error) {
       console.error('Lỗi khi lấy thông tin sản phẩm:', error);
@@ -99,7 +99,7 @@ export const getProductsByCategory = async (req, res) => {
 // Delete a product
 export const deleteProduct = (req, res) => {
   const productId = req.params.id;
-  const query = 'DELETE FROM Products WHERE ID = ?';
+  const query = 'DELETE FROM products WHERE ID = ?';
 
   dbConnection.query(query, [productId], (error, result) => {
     if (error) {
@@ -115,7 +115,7 @@ export const deleteProduct = (req, res) => {
   });
 };
 export const getProducts = (req, res) => {
-  const query = 'SELECT * FROM Products ORDER BY date_create DESC';
+  const query = 'SELECT * FROM products ORDER BY date_create DESC';
   dbConnection.query(query, (error, results) => {
     if (error) {
       console.error('Lỗi khi lấy danh sách sản phẩm:', error);
@@ -168,7 +168,7 @@ export const searchProduct = (req, res) => {
 };
 
 export const getProductsPriceDesc = (req, res) => {
-  const query = 'SELECT * FROM Products ORDER BY Price DESC';
+  const query = 'SELECT * FROM products ORDER BY Price DESC';
   dbConnection.query(query, (error, results) => {
     if (error) {
       console.error('Lỗi khi lấy danh sách sản phẩm:', error);
@@ -180,7 +180,7 @@ export const getProductsPriceDesc = (req, res) => {
 };
 
 export const getProductsPriceAsc = (req, res) => {
-  const query = 'SELECT * FROM Products ORDER BY Price ASC';
+  const query = 'SELECT * FROM products ORDER BY Price ASC';
   dbConnection.query(query, (error, results) => {
     if (error) {
       console.error('Lỗi khi lấy danh sách sản phẩm:', error);

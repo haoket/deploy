@@ -5,7 +5,7 @@ const dbConnection = createDatabaseConnection();
 
 // Get all categories
 export const getCategories = (req, res) => {
-  const query = 'SELECT * FROM Categories';
+  const query = 'SELECT * FROM categories';
   dbConnection.query(query, (error, results) => {
     if (error) {
       console.error('Lỗi khi lấy danh sách danh mục:', error);
@@ -19,7 +19,7 @@ export const getCategories = (req, res) => {
 // Get a single category by ID
 export const getCategoryById = (req, res) => {
   const categoryId = req.params.id;
-  const query = 'SELECT * FROM Categories WHERE ID = ?';
+  const query = 'SELECT * FROM categories WHERE ID = ?';
 
   dbConnection.query(query, [categoryId], (error, results) => {
     if (error) {
@@ -38,7 +38,7 @@ export const getCategoryById = (req, res) => {
 // Create a new category
 export const createCategory = (req, res) => {
   const { Name, Description, Slug } = req.body;
-  const query = 'INSERT INTO Categories (Name, Description, slug) VALUES (?, ?, ?)';
+  const query = 'INSERT INTO categories (Name, Description, slug) VALUES (?, ?, ?)';
 
   dbConnection.query(query, [Name, Description, Slug], (error) => {
     if (error) {
@@ -54,7 +54,7 @@ export const createCategory = (req, res) => {
 export const updateCategory = (req, res) => {
   const categoryId = req.params.id;
   const { Name, Description } = req.body;
-  const query = 'UPDATE Categories SET Name = ?, Description = ? WHERE ID = ?';
+  const query = 'UPDATE categories SET Name = ?, Description = ? WHERE ID = ?';
 
   dbConnection.query(query, [Name, Description, categoryId], (error) => {
     if (error) {
@@ -69,7 +69,7 @@ export const updateCategory = (req, res) => {
 // Delete a category
 export const deleteCategory = (req, res) => {
   const categoryId = req.params.id;
-  const query = 'DELETE FROM Categories WHERE ID = ?';
+  const query = 'DELETE FROM categories WHERE ID = ?';
 
   dbConnection.query(query, [categoryId], (error, result) => {
     if (error) {
