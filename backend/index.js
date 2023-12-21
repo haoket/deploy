@@ -38,7 +38,7 @@ userRoutes(app);
 cartRoutes(app);
 blogRoute(app);
 payment(app);
-app.use("/api/hello", (req, res) => {
+app.use("/", (req, res) => {
   res.send("Hello😁 Welcome ecommerce API!");
 });
 
