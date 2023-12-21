@@ -29,7 +29,7 @@ export const Register = async (req, res) => {
       }
 
       // Thay đổi câu lệnh SQL để phù hợp với MySQL
-      const insertUserQuery = `INSERT INTO Users (name, address, phone, password, email, created_at, role) VALUES (?, ?, ?,?,?,?,?)`;
+      const insertUserQuery = `INSERT INTO users (name, address, phone, password, email, created_at, role) VALUES (?, ?, ?,?,?,?,?)`;
       dbConnection.query(insertUserQuery, [name, address, phone, hashedPassword, email, created_at, role], (error, results) => {
         if (error) {
           console.error('Lỗi khi thêm người dùng:', error);
@@ -62,7 +62,7 @@ export const login = async (req, res) => {
       }
 
 
-      const selectUserQuery = `SELECT * FROM Users WHERE email = ?`;
+      const selectUserQuery = `SELECT * FROM users WHERE email = ?`;
 
       dbConnection.query(selectUserQuery, [email], (error, results) => {
 
