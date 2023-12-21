@@ -7,7 +7,7 @@ const dbConnection = createDatabaseConnection();
 
 
 export const getUsers = (req, res) => {
-  const query = 'SELECT * FROM Users';
+  const query = 'SELECT * FROM users';
 
   dbConnection.query(query, (error, results) => {
     if (error) {
