@@ -25,7 +25,7 @@ export const getUsers = (req, res) => {
 // Get a specific user by ID
 export const getUserById = async (req, res) => {
   const userId = req.params.id;
-  const query = 'SELECT * FROM Users Where id = ?';
+  const query = 'SELECT * FROM users Where id = ?';
 
   dbConnection.query(query, [userId], (error, results) => {
     if (error) {
@@ -45,7 +45,7 @@ export const createUser = async (req, res) => {
   console.log('====================================');
   const created_at = new Date().toDateString();
   try {
-    dbConnection.query('INSERT INTO Users (name, address, phone, password, email, created_at) VALUES (?, ?, ?,?,?,?)', [name, address, phone, password, email, created_at]);
+    dbConnection.query('INSERT INTO users (name, address, phone, password, email, created_at) VALUES (?, ?, ?,?,?,?)', [name, address, phone, password, email, created_at]);
     res.status(201).json({ message: 'User created successfully' });
   } catch (error) {
     console.log(error);
@@ -58,7 +58,7 @@ export const updateUser = async (req, res) => {
   const userId = req.params.id;
   const { email, phone, name, address } = req.body;
   try {
-    dbConnection.query('UPDATE Users SET  email = ?, phone = ?, name = ?, address = ? WHERE id = ?', [email, phone, name, address, userId]);
+    dbConnection.query('UPDATE users SET  email = ?, phone = ?, name = ?, address = ? WHERE id = ?', [email, phone, name, address, userId]);
     res.status(200).json({ message: 'User updated successfully' });
   } catch (error) {
     console.log(error);
@@ -71,7 +71,7 @@ export const updateUser = async (req, res) => {
 export const deleteUser = async (req, res) => {
   const userId = req.params.id;
   try {
-    const result = await dbConnection.query('DELETE FROM Users WHERE id = ?', [userId]);
+    const result = await dbConnection.query('DELETE FROM users WHERE id = ?', [userId]);
 
     if (result.affectedRows > 0) {
       res.status(200).json({ message: 'User deleted successfully' });
@@ -90,7 +90,7 @@ export const updatePassword = async (req, res) => {
 
   try {
     // Lấy thông tin người dùng từ database
-    const query = 'SELECT * FROM Users WHERE id = ?';
+    const query = 'SELECT * FROM users WHERE id = ?';
 
     const [user] = await new Promise((resolve, reject) => {
       dbConnection.query(query, [userId], (error, results) => {
@@ -114,7 +114,7 @@ export const updatePassword = async (req, res) => {
 
     // Cập nhật mật khẩu mới vào database
     await new Promise((resolve, reject) => {
-      dbConnection.query('UPDATE Users SET password = ? WHERE id = ?', [hashedPassword, userId], (error) => {
+      dbConnection.query('UPDATE users SET password = ? WHERE id = ?', [hashedPassword, userId], (error) => {
         if (error) {
           reject(error);
         } else {
