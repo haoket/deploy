@@ -98,7 +98,7 @@ const ProductList = () => {
           <div className="box">
             <div className="row">
               {/* nav danh mục */}
-              <div className=" col-md-2  col-12 " id="filter-col">
+              <div className=" col-md-2  col-12 " id="filter-col" style={{ borderRight: '2px solid #e5e5e5' }}>
                 <span className="filter-header">
                   Danh mục
                 </span>
@@ -127,7 +127,7 @@ const ProductList = () => {
               </div>
 
               {/* hiển thị sản phẩm */}
-              <div className="col-12 col-md-9">
+              <div className="col-12 col-md-10">
                 {loading ? (
                   <Loading />
                 ) : (
@@ -137,29 +137,24 @@ const ProductList = () => {
                       <div className="container">
                         <div className="row" id="latest-products">
                           {currentProducts.map((product, index) => (
-                            <div className="col-12 col-md-4 col-sm-6" key={index}>
-                              <div className="product-card">
-                                < div className="product-card-img" >
-                                  <img src={apiDomain + "/image/" + parseImageLink(product.ImageLink)[0]} alt="" />
-                                  <img src={apiDomain + "/image/" + parseImageLink(product.ImageLink)[1]} alt="" />
-                                </div >
-                                <div className="product-card-info">
-                                  <div className="product-btn">
-                                    <Link to={`/product/${product.ID}`}>
-                                      <button className="btn-flat btn-hover btn-shop-now">Chi tiết</button>
-                                    </Link>
-                                    <button className="btn-flat btn-hover btn-cart-add">
-                                      <i className='bx bxs-cart-add'></i>
-                                    </button>
-                                  </div>
-                                  <div className="product-card-name">
-                                    {product.Name}
-                                  </div>
-                                  <div className="product-card-price">
-                                    {/* <span><del>300</del></span> */}
-                                    <span className="curr-price">{product.Price}.000 VNĐ</span>
-                                  </div>
-                                </div>
+
+                            <div className="col-6 col-md-3 listproduct ">
+
+                              <img className="image-product" src={apiDomain + "/image/" + parseImageLink(product.ImageLink)[0]} alt="" />
+                              {product.Quantity === 0 &&
+                                <img className='label-new' src="https://png.pngtree.com/png-clipart/20230806/original/pngtree-sold-out-blue-red-rubber-vector-picture-image_9913566.png" alt="" />
+                              }
+                              <div className="font-medium md:pt-4 pt-2">
+                                <p className='md:text-[15px] text-center'>{product.Name}</p>
+                                <p className='text-center md:text-[18px] text-red'>{product.Price}.000 VNĐ</p>
+                              </div>
+                              <div className="btn-product">
+                                <Link to={`/product/${product.ID}`} className='btn-view-product'>
+                                  <button className=""><i className="bi bi-search  hover:text-blue-500 text-2xl "></i></button>
+                                </Link>
+                                {product.Quantity != 0 &&
+                                  <button className=''><i className="bi bi-cart-plus hover:text-blue-500 text-2xl "></i></button>
+                                }
                               </div>
                             </div>
                           ))}

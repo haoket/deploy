@@ -63,34 +63,13 @@ const Navbar = React.memo(() => {
                   <a href="#">haoket@mail.com</a>
                 </li>
               </ul>
-              <ul className="devided">
-                <li className="dropdown">
-                  <a href="">USD</a>
-                  <i className='bx bxs-chevron-down'></i>
-                  <ul className="dropdown-content">
-                    <li><a href="#">VND</a></li>
-                    <li><a href="#">JPY</a></li>
-                    <li><a href="#">EUR</a></li>
-                  </ul>
-                </li>
-                <li className="dropdown">
-                  <a href="">ENGLISH</a>
-                  <i className='bx bxs-chevron-down'></i>
-                  <ul className="dropdown-content">
-                    <li><a href="#">VIETNAMESE</a></li>
-                    <li><a href="#">JAPANESE</a></li>
-                    <li><a href="#">FRENCH</a></li>
-                    <li><a href="#">SPANISH</a></li>
-                  </ul>
-                </li>
-                <li><a href="#">ORDER TRACKING</a></li>
-              </ul>
+
             </div>
           </div>
           {/* <!-- end top header --> */}
           {/* <!-- mid header --> */}
           <div className="bg-main">
-            <div className="mid-header container">
+            <div className="mid-header container p-[-10px]">
               <Link to="/" className="logo" onClick={handleDisplayMenu}>Beauty</Link>
               <div className="search">
                 <input type="text" placeholder="Tìm kiếm..." onChange={(e) => setItemSearch(e.target.value)} />
@@ -101,7 +80,7 @@ const Navbar = React.memo(() => {
 
               </div>
               <ul className="user-menu gap-10">
-                <NavLink to="/cart" className="relative  flex items-center  ">
+                <NavLink to="/cart" className="relative  flex items-center  " onClick={handleDisplayMenu}>
                   <FaShoppingBag style={{ fontSize: "2rem" }} />
 
                   {cartItems.length > 0 && (
@@ -111,7 +90,7 @@ const Navbar = React.memo(() => {
                 <div>
                   {user && (
                     <>
-                      <Link to="/profile " >
+                      <Link to="/profile " onClick={handleDisplayMenu}>
                         <div className='flex justify-center flex-col items-center'>
                           {/* <img src={apiDomain + "/image/" + user.img} alt="" className='rounded-full  h-10' /> */}
                           <h1 className='text-[15px] flex justify-center items-center mr-2'>Tài khoản: {user.name}</h1>

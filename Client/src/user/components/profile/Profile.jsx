@@ -47,7 +47,7 @@ export const Profile = () => {
                     id: user.id,
                 },
             });
-            setOrders(response.data);
+            setOrders(response.data.sort((a, b) => b.ID - a.ID));
         } catch (error) {
             console.error("Error fetching orders:", error);
         }
@@ -145,7 +145,7 @@ export const Profile = () => {
     }
 
     return (
-        <div className='px-40'>
+        <div className='px-10 lg:px-40'>
 
             <ToastContainer />
             <div>

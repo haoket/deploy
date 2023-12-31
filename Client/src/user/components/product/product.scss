@@ -1,0 +1,57 @@
+.listproduct {
+
+    font-family: "Roboto", sans-serif;
+    position: relative;
+    width: 100%;
+    transition: transform 0.5s ease-in-out;
+
+    .image-product {}
+
+    .label-new {
+        position: absolute;
+        width: 30%;
+        height: 20%;
+        top: 0;
+        left: 0;
+        z-index: 10;
+
+
+    }
+
+    .btn-product {
+        transform: translateY(10px);
+        transition: transform 0.5s ease-in-out;
+        opacity: 0;
+        background-color: rgb(245, 206, 212);
+        height: 50px;
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        align-items: center;
+    }
+
+
+    &:hover {
+        transform: translateY(-15px) scale(1.03);
+
+
+        transition: all 0.5s ease-in-out;
+
+        .btn-product {
+            transform: translateY(0);
+            opacity: 1;
+            transition: transform 0.5s ease-in-out;
+        }
+
+    }
+
+    &:not(:hover) {
+        transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
+        transform: scale(1);
+
+        .btn-product {
+            transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
+        }
+    }
+
+}

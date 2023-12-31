@@ -5,7 +5,7 @@ import { apiDomain } from '../../../utils/utilsDomain';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { getBlog, getProducts } from '../../../utils/apiCalls';
-
+import './product.scss'
 
 
 
@@ -26,7 +26,7 @@ const Product = () => {
     try {
       const imageArray = JSON.parse(imageLink);
       if (Array.isArray(imageArray) && imageArray.length > 0) {
-        return imageArray[0];
+        return imageArray;
       }
     } catch (error) {
       console.error('Error parsing ImageLink:', error);
@@ -50,33 +50,24 @@ const Product = () => {
           </div>
           <div className="row" id="latest-products">
             {data.map((product, index) => (
-              <div className="col-12 col-md-3 col-sm-9" key={index}>
-                <div className="product-card">
-                  <div className="product-card-img">
-                    <img src={apiDomain + "/image/" + parseImageLink(product.ImageLink)} alt="" />
-                    <img src={apiDomain + "/image/" + parseImageLink(product.ImageLink)} alt="" />
-                  </div>
-                  <div className="product-card-info">
-                    <div className="product-btn">
-                      <Link to={`/product/${product.ID}`}>
-                        <button className="btn-flat btn-hover btn-shop-now">Chi tiết</button>
-                      </Link>
-                      <button className="btn-flat btn-hover btn-cart-add">
-                        <i className='bx bxs-cart-add'></i>
-                      </button>
 
-                    </div>
-                    <div className="product-card-name">
-                      {product.Name}
-                    </div>
-                    <div className="product-card-price">
-                      {/* <span><del>300</del></span> */}
-                      <span className="curr-price">{product.Price}.000 VNĐ</span>
-                    </div>
-                  </div>
+              <div className="col-6 col-md-3 listproduct " key={index}>
+
+                <img className="image-product" src={apiDomain + "/image/" + parseImageLink(product.ImageLink)[0]} alt="" />
+                <img className='label-new' src="https://www.myboat.com.au/wp-content/uploads/new.png" alt="" />
+                <div className="font-medium md:pt-4 pt-2">
+                  <p className='md:text-[15px] text-center'>{product.Name}</p>
+                  <p className='text-center md:text-[18px] text-red'>{product.Price}.000 VNĐ</p>
                 </div>
-
+                <div className="btn-product">
+                  <Link to={`/product/${product.ID}`} className='btn-view-product'>
+                    <button className=""><i className="bi bi-search  hover:text-blue-500 text-3xl "></i></button>
+                  </Link>
+                  <button className=''><i className="bi bi-cart-plus hover:text-blue-500 text-3xl "></i></button>
+                </div>
               </div>
+
+
             ))}
 
           </div>
@@ -91,40 +82,7 @@ const Product = () => {
       {/* <!-- end product list --> */}
 
 
-      {/* {data.map((product, index) => (
-        <div key={index} className="flex flex-col gap-2 cursor-pointer select ">
-         ///////////// Wrap the product image and name with Link component
-          <Link to={`/product/${product.ID}`}>
-            <div className="rounded-[5px] h-[13rem] flex justify-center">
-              <img
-                className="rounded-[10px] h-full object-contain "
-                src={apiDomain + "/image/" + parseImageLink(product.ImageLink)}
-                alt={product.Name}
-              />
-            </div>
 
-
-            <h3 className="font-bold hover:text-red-500 transition-all duration-300 px-16  flex items-center">
-              <p className='text-[#5c5c59]'>{product.Name}</p>
-            </h3>
-          </Link>
-          <div className="relative inline-block group font-bold px-16 ">
-            <span className="inline-block transition-all duration-300 ">
-              <p className='text-[#f42c37]'>{product.Price}.000 VNĐ</p>
-
-            </span>
-            <ToastContainer />
-            <button
-              className="left-full group-hover:translate-y-0 bg-red-500 text-white rounded-[20px] opacity-0 group-hover:opacity-100 transition-all duration-300"
-              onClick={() => handleAddToCart(product.ID)} // Call handleAddToCart with the product ID when the button is clicked
-            >
-              Add to Cart
-            </button>
-          </div>
-
-        </div>
-
-      ))} */}
     </>
   );
 };

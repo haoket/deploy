@@ -237,14 +237,29 @@ const ProductDetails = () => {
 
                 <div className="product-info-price">{totalPrice}.000 VNĐ</div>
                 <div className="product-quantity-wrapper">
-                  <span className="product-quantity-btn" onClick={handleDeCrease}
-                    disabled={itemCount <= 1}>
-                    <i className='bx bx-minus'></i>
-                  </span>
+                  <span className="product-info-detail-title pr-2">Số lượng:</span>
+                  {itemCount > 1 ?
+                    <span className="product-quantity-btn" onClick={handleDeCrease}>
+
+                      <i className='bx bx-minus'></i>
+                    </span> :
+                    <span className="product-quantity-btn bg-white" >
+
+
+                    </span>
+
+
+                  }
+
                   <span className="product-quantity">{itemCount}</span>
-                  <span className="product-quantity-btn" onClick={handleIncrement}>
-                    <i className='bx bx-plus'></i>
-                  </span>
+                  {itemCount < product.Quantity ?
+
+                    <span className="product-quantity-btn" onClick={handleIncrement}>
+                      <i className='bx bx-plus'></i>
+                    </span> :
+                    <span className="product-quantity-btn bg-white" />
+                  }
+                  <span className="product-info-detail-title pl-2">    {product.Quantity} sản phẩm có sẵn</span>
                 </div>
                 <div>
                   <button className="btn-flat btn-hover" onClick={() => handleAddToCart(product.ID)}>Thêm vào giỏ hàng</button>

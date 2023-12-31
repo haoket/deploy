@@ -38,7 +38,23 @@ export const createOrderItem = async (req, res) => {
 };
 
 
+export const updateQuantityProduct = async (req, res) => {
+  try {
+    const { productID, quantitySold } = req.body;
+    console.log('====================================');
+    console.log(productID, quantitySold);
+    console.log('====================================');
 
+    // Thực hiện truy vấn cập nhật số lượng sản phẩm
+    const updateQuery = 'UPDATE products SET Quantity = Quantity - ?, QuantitySold = QuantitySold + ? WHERE ID = ?';
+    await dbConnection.query(updateQuery, [quantitySold, quantitySold, productID]);
+
+    res.status(200).json({ message: 'Cập nhật số lượng sản phẩm thành công' });
+  } catch (error) {
+    console.error('Lỗi khi cập nhật số lượng sản phẩm:', error);
+    res.status(500).json({ error: 'Lỗi khi cập nhật số lượng sản phẩm' });
+  }
+};
 
 
 

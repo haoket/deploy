@@ -20,7 +20,8 @@ import {
   getOrderByStatus,
   updateStatusOrder,
   getAllOrder,
-  getOrderByIDCustomer
+  getOrderByIDCustomer,
+  updateQuantityProduct
 } from '../controllers/ordersControllers.js';
 
 const orderRoutes = (app) => {
@@ -39,6 +40,7 @@ const orderRoutes = (app) => {
   app.route('/getOrderByStatus').get(getOrderByStatus);
   app.route('/getOrderByIDCustomer').get(getOrderByIDCustomer);
   app.route('/getAllOrders').get(getAllOrder);
+  app.route('/update-product-quantity').post(updateQuantityProduct);
 
 
 

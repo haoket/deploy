@@ -9,6 +9,10 @@ import { useNavigate } from "react-router-dom";
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 
+import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage';
+import { firebaseConnect } from '../../../utils/firebase';
+
+
 const ProductForm = () => {
     const [selectedImages, setSelectedImages] = useState([]);
     const [name, setName] = useState("");
@@ -18,32 +22,33 @@ const ProductForm = () => {
     const [stars, setStars] = useState("");
     const [quantity, setQuantity] = useState("");
     const navigate = useNavigate();
+    const storage = getStorage();
+
     const handleImageSelect = async (e) => {
-        const files = e.target.files[0]; // Chọn tất cả các tệp đã chọn
+        const files = e.target.files[0];
 
         if (files) {
-
-            const formData = new FormData();
-            formData.append('ImageLink', files);
+            const storage = getStorage(); // Lấy đối tượng storage từ Firebase
+            const storageRef = ref(storage, `images/${files.name}`);
+            const uploadTask = uploadBytesResumable(storageRef, files);
 
             try {
-                // Gửi hình ảnh lên server
-                const response = await uploadImage(formData);
-                console.log('====================================');
-                console.log("Tải lên hình ảnh:", response.fileName);
-                console.log('====================================');
-                const uploadedImageName = response.fileName;
+                uploadTask.on('state_changed', (snapshot) => {
+                    // Quá trình tải lên, bạn có thể theo dõi tiến trình tại đây nếu cần
+                }, (error) => {
+                    console.error('Lỗi khi tải lên hình ảnh:', error);
+                }, async () => {
+                    // Khi tải lên thành công, lấy URL của ảnh
+                    const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+                    console.log('URL hình ảnh:', downloadURL);
 
-                // Cập nhật danh sách hình ảnh
-                setSelectedImages([...selectedImages, uploadedImageName]);
-
+                    // Cập nhật danh sách hình ảnh
+                    setSelectedImages([...selectedImages, downloadURL]);
+                });
             } catch (error) {
-                console.error('Lỗi khi tải lên hình ảnh: ', error);
+                console.error('Lỗi khi tải lên hình ảnh:', error);
             }
         }
-        console.log('====================================');
-        console.log("selectedImages", selectedImages);
-        console.log('====================================');
     };
 
     const handleRemoveImage = (imageIndex) => {
@@ -248,7 +253,7 @@ const ProductForm = () => {
                                     {selectedImages.length > 0 && selectedImages.map((image, index) => (
 
                                         <div key={index} className="m-1 relative" >
-                                            <img src={apiDomain + "/image/" + image} width={200} height={200} alt={`Ảnh ${index}`} />
+                                            <img src={image} width={200} height={200} alt={`Ảnh ${index}`} />
                                             <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded absolute top-0 right-0 "
                                                 onClick={() => handleRemoveImage(index)}>
                                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-3 h-3">

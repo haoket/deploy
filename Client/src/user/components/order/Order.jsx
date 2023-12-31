@@ -83,6 +83,10 @@ export const Order = () => {
                 }
 
                 await axios.post(`${apiDomain}/create-order-item`, data);
+                await axios.post(`${apiDomain}/update-product-quantity`, {
+                    productID: item.ID,
+                    quantitySold: item.quantity,
+                });
             }
 
             toast.success(`Đặt hàng thành công`, {

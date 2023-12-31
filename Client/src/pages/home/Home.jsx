@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import Product from "../../user/components/product/Product"
 import BlogHome from './BlogHome';
 import Loading from '../../user/components/amination/Loading';
+import ProductSale from '../../user/components/product/ProductSale';
 const Home = () => {
   const navigate = useNavigate()
   const user = JSON.parse(localStorage.getItem("user"))
@@ -76,8 +77,8 @@ const Home = () => {
                       <div className="info">
                         <div className="info-content">
                           <h3 className={slide.animationDirection}>{slide.name}</h3>
-                          <h2 className={`${slide.animationDirection} trans-delay-0-2`}>{slide.title}</h2>
-                          <p className={`${slide.animationDirection} trans-delay-0-4`}>{slide.description}</p>
+                          <h2 className={`${slide.animationDirection} trans-delay-0-2 `}>{slide.title}</h2>
+                          <p className={`${slide.animationDirection} trans-delay-0-4 text-xl mt-[-30px]`}>{slide.description}</p>
                           <div className={`${slide.animationDirection} trans-delay-0-6`}>
                             <button className="btn-flat btn-hover">
                               <Link to='/products'>Ghé ghop</Link>
@@ -103,6 +104,7 @@ const Home = () => {
 
             {/* <SellerProducts /> */}
             <Product />
+            <ProductSale />
             <BlogHome />
           </div>
         )}
