@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import './loginPage.css'
+import './login.css'
 import { useContext, useState } from 'react';
 import Axios from "axios";
 import { Context } from "../../../src/context/Context";
