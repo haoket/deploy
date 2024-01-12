@@ -114,15 +114,16 @@ const Suggest = () => {
                     </div>
                     <div className="row" id="latest-products">
                         {data.map((product, index) => (
+                            <div className="col-6 col-md-3 listproduct " key={index}>
+                                <Link to={`/product/${product.ID}`}>
+                                    <img className="image-product" src={parseImageLink(product.ImageLink)[0]} alt="" />
 
-                            <div className="col-4 col-md-2 listproduct " key={index}>
-
-                                <img className="image-product" src={parseImageLink(product.ImageLink)[0]} alt="" />
-
-                                <div className="font-medium md:pt-4 pt-2">
+                                </Link>
+                                <img className='label-new' src="/images/new.png" alt="" />
+                                <Link to={`/product/${product.ID}`} className="font-medium md:pt-4 pt-2">
                                     <p className='md:text-[15px] text-center'>{product.Name}</p>
                                     <p className='text-center md:text-[18px] text-red'>{product.Price}.000 VNĐ</p>
-                                </div>
+                                </Link>
                                 <div className="btn-product">
                                     <Link to={`/product/${product.ID}`} className='btn-view-product'>
                                         <button className=""><i className="bi bi-search  hover:text-blue-500 text-3xl "></i></button>
