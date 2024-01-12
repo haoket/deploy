@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { apiDomain } from '../../../utils/utilsDomain';
 import { Context } from '../../../context/Context';
 import axios from 'axios';
-import './profile.css'
+import './Profile.css'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Suggest from '../product/Suggest';
