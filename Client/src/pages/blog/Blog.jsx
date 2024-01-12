@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import './Blog.css';
+import './blog.css';
 import { getBlog } from '../../utils/apiCalls';
 import { Link } from 'react-router-dom';
 import { apiDomain } from '../../utils/utilsDomain';
 import { delay, motion } from 'framer-motion';
 import Loading from '../../user/components/amination/Loading';
+import Suggest from '../../user/components/product/Suggest';
 
 
 const Blog = () => {
@@ -74,6 +75,7 @@ const Blog = () => {
                     )}
                 </div>
             </section>
+            <Suggest />
         </motion.div>
     );
 };

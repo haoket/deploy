@@ -19,7 +19,7 @@ export const ContextProvider = ({ children }) => {
 
   const getCartItems = async () => {
     try {
-      const response = await axios.get(`${apiDomain}/cart`);
+      const response = await axios.get(`${apiDomain}/cart/${user.id}`);
       dispatch({ type: "SET_CART_ITEMS", payload: response.data });
     } catch (error) {
       console.error("Error fetching cart items:", error);
@@ -31,6 +31,7 @@ export const ContextProvider = ({ children }) => {
   }, []);
 
   const handleAddToCart = async (product_id) => {
+
     try {
       await axios.post(`${apiDomain}/cart`, { product_id });
       getCartItems();

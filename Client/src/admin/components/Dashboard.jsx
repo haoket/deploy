@@ -58,26 +58,25 @@ export const Dashboard = () => {
 
   }, [])
   return (
-    <div className=" w-full">
+    <div className=" w-full mt-20 md:mt-0">
       {/* <!-- content --> */}
       <div className="content ">
 
         <div className="row row-cols-1 row-cols-md-3 g-4">
-          <div className="col-lg-7 col-md-12">
+          <div className="col-lg-7 col-md-12 ">
             <div className="card widget h-100">
-              <div className="card-header d-flex">
-                <h6 className="card-title">
-                  Tổng doanh thu
-                  <a href="#" className="bi bi-question-circle ms-1 small" data-bs-toggle="tooltip"
-                    title="Daily orders and sales"></a>
-                </h6>
-              </div>
+
               <div className="card-body">
                 <div className="d-md-flex align-items-center mb-3">
                   <div className="d-flex align-items-center">
-                    <div className="display-7 me-3">
-                      <i className="bi bi-bag-check me-2 text-success"></i> {totalSales}.000 VNĐ
-                    </div>
+
+                    <h6 className="card-title">
+                      Tổng doanh thu
+                      <div className="display-7 me-3">
+                        <i className="bi bi-bag-check me-2 text-success"></i> {totalSales}.000 VNĐ
+                      </div>
+                    </h6>
+
                   </div>
 
                 </div>
@@ -87,54 +86,33 @@ export const Dashboard = () => {
           </div>
 
           <div className="col-lg-4 col-md-12">
-            <div className="card h-100">
-              <div className="card-body">
-                <div className="d-flex mb-3">
-                  <div className="display-7">
-                    <i className="bi bi-basket"></i>
-                  </div>
-
+            <div className="card widget  ">
+              <div className="card-body text-center">
+                <div className="text-black-50">
+                  {/* <div className="bi bi-box-seam display-6 mb-3"></div> */}
+                  {/* <div className="display-8 mb-2">Số sản phẩm đã bán</div> */}
+                  {/* <h5>{totalProducts}</h5> */}
                 </div>
-                <h4 className="mb-3">Tổng đơn hàng</h4>
-                <div className="d-flex mb-3">
-                  <div className="display-7">{data.length}</div>
-                  <div className="ms-auto" id="total-orders"></div>
-                </div>
-
+                {/* <div id="products-sold"></div> */}
               </div>
             </div>
           </div>
-          {/* <div className="col-lg-4 col-md-12">
-            <div className="card h-100">
-              <div className="card-body">
+
+          <div className="col-lg-4 col-md-12 flex items-center justify-center">
+
+            <div className="card widget h-100">
+              <div className="card-body flex items-center flex-col justify-center border border-2  rounded bg-green-300 font-bold text-lg">
                 <div className="d-flex mb-3">
-                  <div className="display-7">
-                    <i className="bi bi-credit-card-2-front"></i>
+                  <div className="display-12">
+                    <i className="bi bi-basket"></i>
                   </div>
-
                 </div>
-                <h4 className="mb-3">Sales</h4>
+                <h4 className="mb-3">Tổng đơn hàng</h4>
                 <div className="d-flex mb-3">
-                  <div className="display-7">$3.759,00</div>
-                  <div className="ms-auto" id="total-sales"></div>
+                  <div className="display-3">{data.length}</div>
+                  <div className="ms-auto" id="total-orders"></div>
                 </div>
-                <div className="text-danger">
-                  Over last month 2.4% <i className="small bi bi-arrow-down"></i>
-                </div>
-              </div>
-            </div>
-          </div> */}
 
-
-          <div className="col-lg-4 col-md-6">
-            <div className="card h-100 bg-purple">
-              <div className="card-body text-center">
-                <div className="text-white-50">
-                  <div className="bi bi-box-seam display-6 mb-3"></div>
-                  <div className="display-8 mb-2">Số sản phẩm đã bán</div>
-                  <h5>{totalProducts}</h5>
-                </div>
-                <div id="products-sold"></div>
               </div>
             </div>
           </div>
@@ -147,7 +125,7 @@ export const Dashboard = () => {
               <div className="row g-4">
                 <div className="col-md-6">
                   <div className="card border-0">
-                    <div className="card-body text-center">
+                    <div className="card-body text-center border border-2 border-secondary rounded">
                       <div className="display-5">
                         <i className="bi bi-truck text-secondary"></i>
                       </div>
@@ -162,7 +140,7 @@ export const Dashboard = () => {
                 </div>
                 <div className="col-md-6">
                   <div className="card border-0">
-                    <div className="card-body text-center">
+                    <div className="card-body text-center border border-2 border-warning rounded">
                       <div className="display-5">
                         <i className="bi bi-receipt text-warning"></i>
                       </div>
@@ -178,7 +156,7 @@ export const Dashboard = () => {
 
                 <div className="col-md-6">
                   <div className="card border-0">
-                    <div className="card-body text-center">
+                    <div className="card-body text-center border border-2 border-success rounded">
                       <div className="display-5">
                         <i className="bi bi-cursor text-success"></i>
                       </div>
@@ -193,7 +171,7 @@ export const Dashboard = () => {
                 </div>
                 <div className="col-md-6">
                   <div className="card border-0">
-                    <div className="card-body text-center">
+                    <div className="card-body text-center border border-2 border-danger rounded">
                       <div className="display-5">
                         <i className="bi bi-cart-x text-danger"></i>
                       </div>

@@ -9,7 +9,7 @@ export const AdminLayout = () => {
       <Navbar />
       <div className="flex">
         <Sidebar />
-        <div className="w-full mt-20 ">
+        <div className="w-full mt-20 pb-20">
           <Outlet />
         </div>
       </div>

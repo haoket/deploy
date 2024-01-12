@@ -11,7 +11,7 @@
         position: absolute;
         width: 30%;
         height: 20%;
-        top: 0;
+        top: -10px;
         left: 0;
         z-index: 10;
 
@@ -22,12 +22,13 @@
         transform: translateY(10px);
         transition: transform 0.5s ease-in-out;
         opacity: 0;
-        background-color: rgb(245, 206, 212);
+        background-color: none;
         height: 50px;
         display: flex;
         justify-content: center;
         gap: 20px;
         align-items: center;
+        border: solid 0.5px gray;
     }
 
 
@@ -38,6 +39,7 @@
         transition: all 0.5s ease-in-out;
 
         .btn-product {
+
             transform: translateY(0);
             opacity: 1;
             transition: transform 0.5s ease-in-out;

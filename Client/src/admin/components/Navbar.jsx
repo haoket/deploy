@@ -26,7 +26,7 @@ export const Navbar = () => {
       </div>
       <div className="">
 
-        <button className="text-white px-4 py-1 bg-blue-500 rounded-[20px]" onClick={handleLogout} style={{ fontSize: "1rem" }}>
+        <button className="text-white px-4 py-1 bg-blue-500 rounded-[20px] mr-[20px]" onClick={handleLogout} style={{ fontSize: "1rem" }}>
           Đăng xuất
         </button>
 

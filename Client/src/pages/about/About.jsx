@@ -19,11 +19,11 @@ const About = () => {
         <Loading />
       ) : (
         <>
-          <div className="bg-[#e2e2e2] w-screen p-16  mb-8 ">
+          <div className="bg-[#e2e2e2] w-screen p-16  mb-4 lg:mt-[100px]">
 
-            <i className="flex flex-col items-center w-full">
+            <p className="flex flex-col items-center w-full">
               <h1 className="font-bold text-4xl ">Về chúng tôi</h1>
-            </i>
+            </p>
           </div>
           <div className='flex mb-20 md:mx-[10%]'>
 
@@ -50,7 +50,10 @@ const About = () => {
                   Mỗi sản phẩm tại "Glamour Beauty" là một câu chuyện về vẻ đẹp tự tin và sự lựa chọn thông thái.
                   <br />
                   Hãy đắm chìm vào thế giới mỹ phẩm tinh tế của chúng tôi và khám phá sức hút đặc biệt của bạn!</p>
-                <Link to={'/products '} className='bg-[#f42c37] px-6 py-2 text-white rounded-[20px] mx-20 '>Mua sắm ngay</Link>
+                <Link to={'/products '} onClick={() => window.scrollTo({
+                  top: 0,
+                  behavior: 'smooth', // Nếu bạn muốn có hiệu ứng cuộn mượt
+                })} className='bg-[#f42c37] px-6 py-2 text-white rounded-[20px] mx-20 '>Mua sắm ngay</Link>
               </div>
               <section id="about-app" className="section-p1  order-1  col-12 col-lg-5">
                 <div className="video">
@@ -61,7 +64,8 @@ const About = () => {
             </div>
           </div>
         </>
-      )}
+      )
+      }
 
     </>
 

@@ -1,24 +1,37 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import Product from "../../user/components/product/Product"
 import BlogHome from './BlogHome';
 import Loading from '../../user/components/amination/Loading';
 import ProductSale from '../../user/components/product/ProductSale';
+import axios from 'axios';
+import { apiDomain } from '../../utils/utilsDomain';
+import { Context } from '../../context/Context';
 const Home = () => {
   const navigate = useNavigate()
   const user = JSON.parse(localStorage.getItem("user"))
   const [slideIndex, setSlideIndex] = useState(0);
   const [slidePlay, setSlidePlay] = useState(true);
   const [loading, setLoading] = useState(true);
+  const { setCartItems: updateItemsCount } = useContext(Context);
 
 
+  const getCartItems = async () => {
+    try {
+      const response = await axios.get(`${apiDomain}/cart/${user.id}`);
 
-
+      updateItemsCount(response.data)
+    } catch (error) {
+      console.error("Error fetching cart items:", error);
+    }
+  };
   useEffect(() => {
+
+    getCartItems();
     setTimeout(() => {
       setLoading(false); // Thay đổi trạng thái loading thành false sau 2 giờ
     }, 1000);
-  })
+  }, [])
   const slides = [
     {
       name: 'Khám Phá Vẻ Đẹp Tự Tin với Sự Chăm Sóc Đặc Biệt ',
@@ -48,70 +61,73 @@ const Home = () => {
     const interval = setInterval(() => {
       if (!slidePlay) return;
       nextSlide();
-    }, 3000);
+    }, 2500);
 
     return () => clearInterval(interval);
   }, [slideIndex, slidePlay]);
 
 
-  useEffect(() => {
-    if (!user) {
-      return navigate("/auth/login")
-    }
-  }, [user])
-  if (user) {
-    return (
-      <>
-        {loading ? (
-          <Loading />
-        ) : (
+  // useEffect(() => {
+  //   if (!user) {
+  //     return navigate("/auth/login")
+  //   }
+  // }, [user])
 
-          <div>
+  return (
+    <>
+      {loading ? (
+        <Loading />
+      ) : (
 
-
-            <div className="hero">
-              <div className="slider">
-                <div className="container">
-                  {slides.map((slide, index) => (
-                    <div key={index} className={`slide ${index === slideIndex ? 'active' : ''}`}>
-                      <div className="info">
-                        <div className="info-content">
-                          <h3 className={slide.animationDirection}>{slide.name}</h3>
-                          <h2 className={`${slide.animationDirection} trans-delay-0-2 `}>{slide.title}</h2>
-                          <p className={`${slide.animationDirection} trans-delay-0-4 text-xl mt-[-30px]`}>{slide.description}</p>
-                          <div className={`${slide.animationDirection} trans-delay-0-6`}>
-                            <button className="btn-flat btn-hover">
-                              <Link to='/products'>Ghé ghop</Link>
-                            </button>
-                          </div>
+        <div>
+          <div className="hero w-full lg:h-[500px] h-[400px] sm:h-[500px] md:h-[600px]">
+            <div className="slider">
+              <div className="container">
+                {slides.map((slide, index) => (
+                  <div key={index} className={`slide ${index === slideIndex ? 'active' : ''}`}>
+                    <div className="info">
+                      <div className="info-content">
+                        <h3 className={`${slide.animationDirection} hidden lg:block`}>{slide.name}</h3>
+                        <h2 className={`${slide.animationDirection} trans-delay-0-2 `}>{slide.title}</h2>
+                        <p className={`${slide.animationDirection} trans-delay-0-4 text-xl mt-[-30px]`}>{slide.description}</p>
+                        <div className={`${slide.animationDirection} trans-delay-0-6`}>
+                          <button className="btn-flat btn-hover rounded">
+                            <Link to='/products'>Ghé ghop</Link>
+                          </button>
                         </div>
                       </div>
-                      <div className={`img ${slide.animationDirection}`}>
-                        <img src={slide.image} alt="" />
-                      </div>
                     </div>
-                  ))}
-                </div>
-                <button className="slide-controll slide-next" onClick={() => { nextSlide(); }}>
-                  <i className='bx bxs-chevron-right'></i>
-                </button>
-                <button className="slide-controll slide-prev" onClick={() => { prevSlide(); }}>
-                  <i className='bx bxs-chevron-left'></i>
-                </button>
+                    <div className={`img ${slide.animationDirection}`}>
+                      <img src={slide.image} alt="" />
+                    </div>
+                  </div>
+                ))}
               </div>
+              {/* <button className="slide-controll slide-next" onClick={() => { nextSlide(); }}>
+                <i className='bx bxs-chevron-right'></i>
+              </button>
+              <button className="slide-controll slide-prev" onClick={() => { prevSlide(); }}>
+                <i className='bx bxs-chevron-left'></i>
+              </button> */}
             </div>
-            {/* <!-- end hero section --> */}
-
-            {/* <SellerProducts /> */}
-            <Product />
-            <ProductSale />
-            <BlogHome />
           </div>
-        )}
-      </>
+          {/* <!-- end hero section --> */}
 
-    )
-  }
+          {/* <SellerProducts /> */}
+          <Product />
+          <div className='h-[auto] w-full pb-20'>
+            <img className='center lg:w-[90%] w-[100%]' src="https://hali.vn/wp-content/uploads/2020/07/thiet-ke-banner-my-pham3.jpg" alt="" />
+          </div>
+          <ProductSale />
+          <div className='h-[auto] w-full pb-20'>
+            <img className='center lg:w-[90%] w-[100%]' src="/images/banner.png" alt="" />
+          </div>
+          <BlogHome />
+        </div>
+      )}
+    </>
+
+  )
 }
 
 export default Home;

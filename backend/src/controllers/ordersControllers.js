@@ -36,8 +36,6 @@ export const createOrderItem = async (req, res) => {
 
   });
 };
-
-
 export const updateQuantityProduct = async (req, res) => {
   try {
     const { productID, quantitySold } = req.body;
@@ -59,11 +57,14 @@ export const updateQuantityProduct = async (req, res) => {
 
 
 
+
+
+
 // Get all orders
 export const getOrders = async (req, res) => {
   try {
     const pool = await sql.connect(config.sql);
-    const result = await pool.request().query('SELECT * FROM orders');
+    const result = await pool.request().query('SELECT * FROM Orders');
     res.status(200).json(result.recordset);
   } catch (error) {
     res.status(500).json({ error: `An error occurred while retrieving orders... ${error.message}` });
@@ -80,7 +81,7 @@ export const getOrderById = async (req, res) => {
     const pool = await sql.connect(config.sql);
     const result = await pool.request()
       .input('orderId', sql.Int, orderId)
-      .query('SELECT * FROM orders WHERE ID = @orderId');
+      .query('SELECT * FROM Orders WHERE ID = @orderId');
 
     if (!result.recordset[0]) {
       res.status(404).json({ message: 'Order not found' });
@@ -215,6 +216,7 @@ export const getAllOrder = async (req, res) => {
         o.message,
         o.email,
         o.phone,
+        o.isPaid,
         o.TotalAmount,
         p.name AS Name, 
         p.ImageLink AS img,
@@ -251,6 +253,7 @@ export const getAllOrder = async (req, res) => {
             name: row.name,
             email: row.email,
             status: row.status,
+            isPaid: row.isPaid,
             date_create: row.date_create,
             message: row.message,
             phone: row.phone
@@ -285,7 +288,7 @@ export const updateOrder = async (req, res) => {
       .input('CustomerID', sql.Int, CustomerID)
       .input('OrderDate', sql.Date, OrderDate)
       .input('TotalAmount', sql.Decimal, TotalAmount)
-      .query('UPDATE orders SET CustomerID = @CustomerID, OrderDate = @OrderDate, TotalAmount = @TotalAmount WHERE ID = @orderId');
+      .query('UPDATE Orders SET CustomerID = @CustomerID, OrderDate = @OrderDate, TotalAmount = @TotalAmount WHERE ID = @orderId');
 
     res.status(200).json({ message: 'Order updated successfully' });
   } catch (error) {
@@ -298,11 +301,11 @@ export const updateOrder = async (req, res) => {
 
 export const updateStatusOrder = async (req, res) => {
   const orderId = req.params.id;
-  const { status } = req.body;
+  const { status, isPaid } = req.body;
 
-  const query = 'UPDATE orders SET status = ? WHERE ID = ?';
+  const query = 'UPDATE orders SET status = ?, isPaid = ? WHERE ID = ?';
 
-  dbConnection.query(query, [status, orderId], (error) => {
+  dbConnection.query(query, [status, isPaid, orderId], (error) => {
     if (error) {
       console.error('Lỗi khi cập nhật sản phẩm:', error);
       res.status(500).json({ error: 'Lỗi khi cập nhật sản phẩm' });
@@ -319,7 +322,7 @@ export const deleteOrder = async (req, res) => {
     const pool = await sql.connect(config.sql);
     const result = await pool.request()
       .input('orderId', sql.Int, orderId)
-      .query('DELETE FROM orders WHERE ID = @orderId');
+      .query('DELETE FROM Orders WHERE ID = @orderId');
 
     if (result.rowsAffected[0] === 0) {
       res.status(404).json({ message: 'Order not found' });

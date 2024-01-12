@@ -1,133 +1,247 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import './signup.css'
 import { useNavigate } from "react-router-dom";
-import * as yup from "yup";
-import { yupResolver } from "@hookform/resolvers/yup";
 import Axios from "axios";
-import { useForm } from "react-hook-form";
 import { apiDomain } from "../../utils/utilsDomain";
 const Signup = () => {
 
   const navigate = useNavigate();
 
-  const schema = yup.object().shape({
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [name, setName] = useState('');
+  const [address, setAddress] = useState('');
+  const [phone, setPhone] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [nameError, setNameError] = useState('');
+  const [addressError, setAddressError] = useState('');
+  const [phoneError, setPhoneError] = useState('');
+  const [emailError, setEmailError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+  const [confirmPasswordError, setConfirmPasswordError] = useState('');
+  const validateEmail = () => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!email) {
+      setEmailError('Vui lòng nhập email.');
+      return false;
+    }
+    if (!emailRegex.test(email)) {
+      setEmailError('Email không hợp lệ.');
+      return false;
+    }
+    setEmailError('');
+    return true;
+  };
 
-    email: yup.string().required("Email is required"),
-    password: yup
-      .string()
-      .required("Password is required")
-    // .matches(
-    //   /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
-    //   "Password must contain at least 8 characters, one letter, one number, and one special character"
-    // ),
-  });
+  const validatePassword = () => {
+    if (password.length < 6) {
+      setPasswordError('Mật khẩu phải có ít nhất 6 kí tự.');
+      return false;
+    }
+
+    setPasswordError('');
+    return true;
+  };
+
+  const validateConfirmPassword = () => {
+    if (confirmPassword !== password) {
+      setConfirmPasswordError('Mật khẩu xác nhận không khớp.');
+      return false;
+    }
+
+    setConfirmPasswordError('');
+    return true;
+  };
+  const validateName = () => {
+    if (!name) {
+      setNameError('Vui lòng nhập họ tên');
+      return false;
+    }
+    setNameError('');
+    return true;
+  }
+  const validatePhone = () => {
+    const phoneRegex = /^\d{10}$/;
+
+    if (!phone) {
+      setPhoneError('Vui lòng nhập số điện thoại.');
+      return false;
+    }
+
+    if (!phoneRegex.test(phone)) {
+      setPhoneError('Số điện thoại phải có 10 chữ số.');
+      return false;
+    }
+
+    setPhoneError('');
+    return true;
+  };
+  const validateAddress = () => {
+    if (!address) {
+      setAddressError('Vui lòng nhập địa chỉ');
+      return false;
+    }
+    setAddressError('');
+    return true;
+  }
 
 
-  const { register, handleSubmit, formState: { errors } } = useForm({
-    resolver: yupResolver(schema),
-  });
-  const onSubmit = (data) => {
-    console.log(data)
-    Axios.post(apiDomain + "/auth/signup", data)
-      .then((response) => {
-        response.data.message && alert(response.data.message)
-        navigate("/auth/login")
-      })
-      .catch((error) => {
-        console.log(error);
-      })
+  const onSubmit = (e) => {
+    e.preventDefault();
+
+    // Kiểm tra hợp lệ của email, mật khẩu và mật khẩu xác nhận
+    const isEmailValid = validateEmail();
+    const isPasswordValid = validatePassword();
+    const isConfirmPasswordValid = validateConfirmPassword();
+    const isNameValid = validateName();
+    const isPhoneValid = validatePhone();
+    const isAddressValid = validateAddress();
+
+    if (isEmailValid && isPasswordValid && isConfirmPasswordValid && isNameValid && isPhoneValid && isAddressValid) {
+
+      const data = {
+        email,
+        password,
+        name,
+        address,
+        phone
+      }
+      console.log(data)
+      Axios.post(apiDomain + "/auth/signup", data)
+        .then((response) => {
+          response.data.message && alert(response.data.message)
+          navigate("/auth/login")
+        })
+        .catch((error) => {
+          console.log(error);
+        })
+      console.log('Đã đăng ký với:', { email, password });
+    }
+
   }
 
   return (
-    <div className="signup ">
-      <div className="signup_image">
-        <div>
-          <h1>
-            Bạn đã là thành viên? <strong>Đừng lo lắng</strong>
-          </h1>
-          <Link to="/auth/login" className="secondary-btn">
-            Đăng nhập tại đây
-          </Link>
-        </div>
-      </div>
-      <div className="signup_form">
-        <form onSubmit={handleSubmit(onSubmit)}>
-          {/* <h2>Dont Have an Account?</h2> */}
-          <h1 className="font-bold text-2xl pt-4">Đăng ký thành viên</h1>
-          <div>
-            <label>Tên</label>
-            <input
-              type="text"
-              className="text-input" required="required"  {...register("name")}
-              placeholder="Nhập tên"
-            />
-          </div>
-          <div>
-            <label>Email</label>
-            <input
-              type="text"
-              className="text-input" required="required"  {...register("email")}
-              placeholder="Nhập Email"
-            />
-          </div>
-          <div>
-            <label>Số điện thoại</label>
-            <input
-              type="text"
-              className="text-input" required="required"  {...register("phone")}
-              placeholder="Nhập số điện thoại"
-            />
-          </div>
-          <div>
-            <label>Địa chỉ</label>
-            <input
-              type="text"
-              className="text-input" required="required"  {...register("address")}
-              placeholder="Nhập địa chỉ"
-            />
-          </div>
-          <div>
-            <label>Mật khẩu</label>
-            <input
-              type="password"
-              className="text-input" required="required"   {...register("password")}
-              placeholder="Mật khẩu"
-            />
-          </div>
-          <p className="error" style={{ color: "red" }} >{errors.password?.message}</p>
-          <div>
-            <label>Nhập lại mật khẩu</label>
-            <input
-              type="password"
-              className="text-input" required="required"   {...register("confirmpassword")}
-              placeholder="********"
-            />
-          </div>
-          <p>{errors.confirmpassword?.message}</p>
-          <div className="btn_wrapper">
-            <button className="secondary-btn" type="submit" >Đăng ký</button>
-          </div>
+    <div id="wrapper ">
+      <div class="container h-100 ">
+        <div class="row h-100 justify-content-center align-items-center">
+          <form class="col-md-9">
+            <div class="AppForm shadow-lg">
+              <div class="row">
+                <div class="col-md-6 d-flex justify-content-center align-items-center">
+                  <div class="AppFormLeft pl-2">
 
-          <div className="or">
-            <hr className="bar" />
-            <span>hoặc</span>
-            <hr className="bar" />
-          </div>
-          <div className="btn_wrapper">
-            <Link to="/auth/login" className="secondary-btn">
-              Đăng nhập
-            </Link>
-          </div>
+                    <h1 className="mb-1 0 text-center">Đăng ký tài khoản</h1>
+                    <div class="form-group position-relative mb-4">
+                      <input type="text"
+                        class="form-control border-top-0 border-right-0 border-left-0 rounded-0 shadow-none "
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        onBlur={validateName}
+                        placeholder="Họ và Tên" />
+                      <i class="bi bi-person mr-2"></i>
+                      {nameError && <p style={{ color: 'red' }}>{nameError}</p>}
+                    </div>
+                    <div class="form-group position-relative mb-4">
+                      <input
+                        type="email"
+                        class="form-control border-top-0 border-right-0 border-left-0 rounded-0 shadow-none "
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        onBlur={validateEmail}
+                        placeholder="Email"
+                      />
+                      <i class="bi bi-envelope mr-2"></i>
+                      {emailError && <p style={{ color: 'red' }}>{emailError}</p>}
 
-          <footer className="main-footer">
+                    </div>
+                    <div class="form-group position-relative mb-4">
+                      <input type="number"
+                        maxLength={10}
+                        class="form-control border-top-0 border-right-0 border-left-0 rounded-0 shadow-none"
+                        value={phone}
+                        onChange={(e) => {
+                          // Giới hạn độ dài của số điện thoại thành 10 kí tự
+                          if (e.target.value.length <= 10) {
+                            setPhone(e.target.value);
+                          }
+                        }}
+                        onBlur={validatePhone}
 
-            <div>
-              <Link to="/terms">Terms of use</Link> |{" "}
-              <Link to="/policy">Privacy Policy</Link>
+                        placeholder="Số điện thoại" />
+
+                      <i class="bi bi-telephone mr-2"></i>
+                      {phoneError && <p style={{ color: 'red' }}>{phoneError}</p>}
+                    </div>
+                    <div class="form-group position-relative mb-4 ">
+                      <input type="text"
+                        class="form-control border-top-0 border-right-0 border-left-0 rounded-0 shadow-none"
+                        value={address}
+                        onChange={(e) => setAddress(e.target.value)}
+                        onBlur={validateAddress}
+
+                        placeholder="Địa chỉ" />
+
+                      <i class="bi bi-buildings mr-2"></i>
+                      {addressError && <p style={{ color: 'red' }}>{addressError}</p>}
+                    </div>
+                    <div class="form-group position-relative mb-4">
+                      <input
+                        type="password"
+                        class="form-control border-top-0 border-right-0 border-left-0 rounded-0 shadow-none "
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        onBlur={validatePassword}
+                        placeholder="Mật khẩu"
+                      />
+                      <i class="bi bi-lock mr-2"></i>
+                      {passwordError && <p style={{ color: 'red' }}>{passwordError}</p>}
+
+
+                    </div>
+                    <div class="form-group position-relative mb-4">
+                      <input
+                        type="password"
+                        class="form-control border-top-0 border-right-0 border-left-0 rounded-0 shadow-none "
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        onBlur={validateConfirmPassword}
+                        placeholder="Xác nhận mật khẩu"
+                      />
+                      <i class="bi bi-lock mr-2"></i>
+                      {confirmPasswordError && <p style={{ color: 'red' }}>{confirmPasswordError}</p>}
+
+                    </div>
+
+
+                    <button class="btn btn-success btn-block shadow border-0 py-2 text-uppercase " onClick={onSubmit}>
+                      Đăng ký
+                    </button>
+
+                    <p class="text-center mt-5">
+                      Đã có tài khoản?
+
+                      <Link to="/auth/login">
+                        <span>
+                          Đăng nhập tại đây
+                        </span>
+                      </Link>
+
+                    </p>
+
+                  </div>
+
+                </div>
+                <div class="col-md-6 md:block hidden">
+                  <div class="AppFormRight position-relative d-flex justify-content-center flex-column align-items-center text-center p-5 text-white ">
+                    <h2 class="position-relative px-4 pb-3 mb-4">Welcome</h2>
+                    <p>Chào mừng bạn đến với Beauty Shop, hi vọng bạn hài lòng với các dịch vụ của chúng tôi, chúng tôi luôn đặt uy tín lên hàng đầu, lợi ích khách hàng là trên hết! </p>
+                  </div>
+                </div>
+              </div>
             </div>
-          </footer>
-        </form>
+          </form>
+        </div>
       </div>
     </div>
   );

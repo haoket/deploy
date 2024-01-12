@@ -1,8 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import { Context } from "../../../context/Context";
 
+import { Context } from "../../../context/Context";
 import { apiDomain } from '../../../utils/utilsDomain';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -11,12 +11,13 @@ import { getBlog, getProducts } from '../../../utils/apiCalls';
 import './product.scss'
 
 
-const ProductSale = () => {
+const Suggest = () => {
     const [data, setData] = useState([]);
-    const numberOfProducts = 4;
-    const displayedProducts = data.slice(0, numberOfProducts);
     const { setCartItems } = useContext(Context);
     const { user } = useContext(Context);
+    const numberOfProducts = 6;
+    const displayedProducts = data.slice(0, numberOfProducts);
+    const [isModalOpen, setOpenModal] = useState(false);
 
     const getCartItems = async () => {
         try {
@@ -28,7 +29,7 @@ const ProductSale = () => {
     };
 
 
-    const handleAddToCart2 = async (id, price, name) => {
+    const handleAddToCart = async (id, price, name) => {
 
         if (user) {
 
@@ -54,7 +55,7 @@ const ProductSale = () => {
                 console.error("Error adding item to cart:", error);
             }
         } else {
-            alert("Hãy đăng nhập rồi thực hiện mua sắm!")
+            setOpenModal(true);
         }
 
 
@@ -62,11 +63,8 @@ const ProductSale = () => {
 
 
     const fetchProducts = async () => {
-
-
         const data = await getProducts();
-        // setDataProduct([...dataProduct].sort((a, b) => a.Price - b.Price));
-        setData(data.slice(0, numberOfProducts).sort((a, b) => b.QuantitySold - a.QuantitySold));
+        setData(data.slice(0, numberOfProducts));
 
     };
 
@@ -90,20 +88,37 @@ const ProductSale = () => {
     return (
         <>
             <ToastContainer />
+            {isModalOpen && (
+                <div className='fixed inset-0 flex items-center justify-center z-50'>
+                    <div className='fixed inset-0 bg-gray-500 z-[-1] bg-opacity-75'></div>
+
+                    <div className='bg-white p-6 rounded-lg relative'>
+                        <button className="absolute top-0 right-0 p-1 font-bold   text-black-500" onClick={() => setOpenModal(false)}>X</button>
+                        <h1>Bạn phải đăng nhập để tiếp tục mua sắm</h1>
+                        <div className='flex justify-end'>
+                            <Link to='/auth/login'
+                                className='bg-blue-500 hover:bg-blue-700 center text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline'
+                            >
+                                Đi đến đăng nhập
+                            </Link>
+
+                        </div>
+                    </div>
+                </div>
+            )}
             {/* <!-- product list --> */}
-            <div className="section mt-[-150px]">
+            <div className="section ">
                 <div className="container">
-                    <div className="section-header ">
-                        <h2>Sản phẩm bán chạy</h2>
+                    <div className=" ">
+                        <h2 className='text-[30px] p-2'>Có thể bạn sẽ thích</h2>
                     </div>
                     <div className="row" id="latest-products">
                         {data.map((product, index) => (
 
-
-                            <div className="col-6 col-md-3 listproduct " key={index}>
+                            <div className="col-4 col-md-2 listproduct " key={index}>
 
                                 <img className="image-product" src={parseImageLink(product.ImageLink)[0]} alt="" />
-                                <img className='label-new' src="https://cdn-icons-png.flaticon.com/512/3712/3712214.png" alt="" />
+
                                 <div className="font-medium md:pt-4 pt-2">
                                     <p className='md:text-[15px] text-center'>{product.Name}</p>
                                     <p className='text-center md:text-[18px] text-red'>{product.Price}.000 VNĐ</p>
@@ -112,7 +127,7 @@ const ProductSale = () => {
                                     <Link to={`/product/${product.ID}`} className='btn-view-product'>
                                         <button className=""><i className="bi bi-search  hover:text-blue-500 text-3xl "></i></button>
                                     </Link>
-                                    <button className='' onClick={() => handleAddToCart2(product.ID, product.Price, product.Name)}><i className="bi bi-cart-plus hover:text-blue-500 text-3xl "></i></button>
+                                    <button className='' onClick={() => handleAddToCart(product.ID, product.Price, product.Name)}><i className="bi bi-cart-plus hover:text-blue-500 text-3xl "></i></button>
                                 </div>
                             </div>
 
@@ -120,12 +135,7 @@ const ProductSale = () => {
                         ))}
 
                     </div>
-                    <div className="text-center ">
 
-                        <Link to="/products" className="btn-flat btn-hover rounded">
-                            Xem tất cả
-                        </Link>
-                    </div>
                 </div>
             </div>
             {/* <!-- end product list --> */}
@@ -136,4 +146,4 @@ const ProductSale = () => {
     );
 };
 
-export default ProductSale;
+export default Suggest;

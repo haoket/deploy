@@ -7,10 +7,10 @@ import ChatComponent from "../pages/chatbox"
 const UserLayout = () => {
     return (
         <>
-            <div className="user-layout overflow-hidden">
+            <div className="user-layout overflow-hidden " style={{ padding: "-20px" }}>
                 <div>
                     <Navbar />
-                    <div className="pt-[150px]">
+                    <div className="pt-[80px] " >
                         <Outlet />
                     </div>
                     <ChatComponent />

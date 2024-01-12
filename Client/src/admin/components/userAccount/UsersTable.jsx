@@ -14,6 +14,7 @@ const UsersTable = () => {
     const [id, setId] = useState('');
     const [Order, setOrders] = useState([]);
     const [orderCounts, setOrderCounts] = useState([]);
+    const [keyword, setKeyword] = useState('');
 
     const fetchUsers = async () => {
         try {
@@ -106,7 +107,7 @@ const UsersTable = () => {
 
 
     return (
-        <div className="container px-4">
+        <div className="container px-4 ">
             {modelEdit && (
                 <div className='fixed inset-0 flex items-center justify-center z-50'>
                     <div className='fixed inset-0 bg-gray-500 z-[2] bg-opacity-75'></div>
@@ -223,7 +224,7 @@ const UsersTable = () => {
                                                     <tr>
                                                         <td>
                                                             <figure className="media">
-                                                                <div className="img-wrap"><img src={apiDomain + "/image/" + parseImageLink(product.img)} className="img-thumbnail img-sm" /></div>
+                                                                <div className="img-wrap"><img src={parseImageLink(product.img)} className="img-thumbnail img-sm" /></div>
                                                                 <figcaption className="media-body">
                                                                     <h6 className="title text-truncate"> </h6>
                                                                 </figcaption>
@@ -263,22 +264,36 @@ const UsersTable = () => {
                                 <div className="col-md-6">
                                     <select className="form-select" >
                                         <option value="">...</option>
-                                        <option value="desc">Tăng dần</option>
-                                        <option value="asc">Giảm dần</option>
+                                        <option value="desc">Tăng</option>
+                                        <option value="asc">Giảm</option>
+
                                     </select>
                                 </div>
-                                <div className="col-md-6">
-                                    <div className="input-group">
+                                <div className="col-md-6  flex">
+                                    <div className="input-group  ">
                                         <input
                                             type="text"
-                                            className="form-control"
+                                            className=" form-control"
                                             placeholder="Tìm kiếm"
 
+
                                         />
-                                        <button className="btn btn-outline-light" type="button" >
-                                            <i className="bi bi-search"></i>
+                                    </div>
+                                    <div width="100px">
+                                        {keyword && (
+                                            <button className=" font-bold  p-[3px] rounded absolute right-10 " type="button" >
+                                                <i className="bi bi-x"></i>
+                                            </button>
+
+
+                                        )}
+
+                                        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold p-[9px] ml-1 rounded" type="button" >
+
+                                            <i className="bi bi-search text-sm"></i>
                                         </button>
                                     </div>
+
                                 </div>
                             </div>
                         </form>

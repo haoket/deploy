@@ -71,26 +71,51 @@ const OrdersTable = () => {
     setModalOpen(false);
   };
   const handleUpdateStatus = async () => {
-    try {
-      // Gọi API để cập nhật trạng thái đơn hàng
-      await axios.put(`${apiDomain}/update-orders-status/${selectedOrder.ID}`, { status: selectedStatus });
-      toast.success('Order Status Updated successfully', {
-        position: 'top-right',
-        autoClose: 4000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: 'light',
-      });
+    if (selectedStatus === '1' || selectedStatus === '3') {
+      try {
+        // Gọi API để cập nhật trạng thái đơn hàng
+        await axios.put(`${apiDomain}/update-orders-status/${selectedOrder.ID}`, { status: selectedStatus, isPaid: selectedOrder.isPaid });
+        toast.success('Order Status Updated successfully', {
+          position: 'top-right',
+          autoClose: 4000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'light',
+        });
 
-      // Đóng modal sau khi cập nhật
-      closeModal();
-      fetchOrders();
-    } catch (error) {
-      console.error('Error updating order status:', error);
+        // Đóng modal sau khi cập nhật
+        closeModal();
+        fetchOrders();
+      } catch (error) {
+        console.error('Error updating order status:', error);
+      }
     }
+    if (selectedStatus === '2') {
+      try {
+        // Gọi API để cập nhật trạng thái đơn hàng
+        await axios.put(`${apiDomain}/update-orders-status/${selectedOrder.ID}`, { status: selectedStatus, isPaid: 1 });
+        toast.success('Order Status Updated successfully', {
+          position: 'top-right',
+          autoClose: 4000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'light',
+        });
+
+        // Đóng modal sau khi cập nhật
+        closeModal();
+        fetchOrders();
+      } catch (error) {
+        console.error('Error updating order status:', error);
+      }
+    }
+
   };
   // trạng thái các đơn hàng
   const getStatus = (status) => {
@@ -120,10 +145,12 @@ const OrdersTable = () => {
   const handleSortOrderChange = (e) => {
     setSortOrder(e.target.value);
     const sortedOrders = [...orders].sort((a, b) => {
-      if (e.target.value === 'asc') {
+      if (e.target.value === ' desc') {
+        return a.ID - b.ID;
+      } else if (e.target.value === 'asc') {
+        return b.ID - a.ID;
+      } else if (e.target.value === 'status') {
         return a.status - b.status;
-      } else if (e.target.value === 'desc') {
-        return b.status - a.status;
       }
       return 0; // Nếu giá trị không phải 'asc' hoặc 'desc', trả về 0 để không làm thay đổi thứ tự
     });
@@ -190,6 +217,7 @@ const OrdersTable = () => {
                         <option value="">...</option>
                         <option value="desc">Tăng</option>
                         <option value="asc">Giảm</option>
+                        <option value="status">Tình trạng ưu tiên</option>
 
                       </select>
                     </div>
@@ -314,7 +342,7 @@ const OrdersTable = () => {
                     {selectedOrder.products.map((product) => (
                       <div className='border-gray-100 pt-2'>
                         <div className='flex'>
-                          <img width={100} height={100} src={apiDomain + "/image/" + parseImageLink(product.img)} alt="" />
+                          <img width={100} height={100} src={parseImageLink(product.img)} alt="" />
                           <p className="mb-2"><span span className='font-bold'>Tên sản phẩm:</span> {product.Name}</p>
                         </div>
                         <p className="mb-2"><span span className='font-bold'>Giá:</span>{product.Price}</p>
@@ -323,7 +351,8 @@ const OrdersTable = () => {
                       </div>
                     ))}
 
-                    <p className="mb-2"><span span className='font-bold'>Tình trạng đơn hàng:</span> {getStatus(selectedOrder.status).text}</p>
+                    <p className="mb-2"><span span className='font-bold'>Tình trạng đơn hàng:</span> <span className='text-red'> {getStatus(selectedOrder.status).text}</span></p>
+                    {selectedOrder.isPaid == 1 ? <> <span className='font-bold '>Trạng thái thanh toán:</span> <span className='text-red'>Đã thanh toán</span> </> : <> <span className='font-bold '>Trạng thái thanh toán:</span> <span className='text-red'>Chưa thanh toán</span> </>}
                     <label className="block mb-4">
                       <span span className='font-bold'>Cập nhật:</span>
                       <select
@@ -352,13 +381,13 @@ const OrdersTable = () => {
                         className="bg-green-500 hover:bg-green-700 text-white px-4 py-2 rounded"
                         onClick={handleUpdateStatus}
                       >
-                        Update Status
+                        Cập nhật
                       </button>
                       <button
                         className="bg-red-500 hover:bg-red-700 text-white px-4 py-2 rounded"
                         onClick={closeModal}
                       >
-                        Cancel
+                        Hủy
                       </button>
                     </div>
                   </div>
@@ -369,25 +398,60 @@ const OrdersTable = () => {
               {iOpenModalDetail && (
                 <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-10">
                   <div className="bg-white p-6 rounded shadow-lg w-1/3">
-                    <h3 className="text-xl font-bold mb-4">Update Order Status</h3>
 
                     <h1 className='text-xl font-bold mb-4'>Chi tiết đơn hàng</h1>
 
-                    {selectedOrder.products.map((product) => (
-                      <div className='border-2 border-black'>
-                        <p className="mb-2">Tên sản phẩm: {product.Name}</p>
+
+                    <div className='border-2 '>
+                      {/* <p className="mb-2">Tên sản phẩm: {product.Name}</p>
                         <p className="mb-2">Giá sản phẩm: {product.Price}</p>
                         <p className="mb-2">Số lượng: {product.Quantity}</p>
-                        <hr className='border-1 border-black'></hr>
-                      </div>
-                    ))}
+                        <hr className='border-1 border-black'></hr> */}
 
-                    <p className="mb-2">Tình trạng đơn hàng: {getStatus(selectedOrder.status).text}</p>
+
+
+                      <table className={`table table-hover  active`}>
+                        <thead className="text-muted">
+                          <tr>
+                            <th scope="col">Sản phẩm</th>
+                            <th scope="col">Số lượng</th>
+                            <th scope="col">Giá</th>
+                          </tr>
+                        </thead>
+                        {selectedOrder.products.map((product, index) => (
+                          <tbody key={index}>
+                            <tr>
+                              <td>
+                                <figure className="">
+                                  <div className="img-wrap"><img width={50} src={parseImageLink(product.img)} className="img-thumbnail " /></div>
+                                  <figcaption className="media-body">
+                                    <h6 className="title text-truncate"> </h6>
+                                  </figcaption>
+                                </figure>
+                              </td>
+                              <td>
+                                <span>Số lượng:{product.Quantity}</span>
+                              </td>
+                              <td>
+                                <div className="price-wrap">
+                                  <var className="price">{product.Price}.000VNĐ</var>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        ))}
+                      </table>
+                    </div>
+
+
+                    <p className="mb-2"><span span className='font-bold'>Tình trạng đơn hàng:</span> <span className='text-red'> {getStatus(selectedOrder.status).text}</span></p>
+
+                    {selectedOrder.isPaid == 1 ? <> <span className='font-bold '>Trạng thái thanh toán:</span> <span className='text-red'>Đã thanh toán</span> </> : <> <span className='font-bold '>Trạng thái thanh toán:</span> <span className='text-red'>Chưa thanh toán</span> </>}
 
                     <div className="flex justify-between ">
 
                       <button
-                        className="bg-red-500 hover:bg-red-700 text-white px-4 py-2 rounded"
+                        className="bg-red-500 hover:bg-red-700 text-white px-4 py-2 mt-2 rounded"
                         onClick={closeModalDetail}
                       >
                         Close

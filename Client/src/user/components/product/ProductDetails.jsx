@@ -9,6 +9,7 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 
 const ProductDetails = () => {
+
   const [product, setProduct] = useState(null);
   const [itemCount, setItemCount] = useState(1);
   const { id } = useParams();
@@ -28,6 +29,8 @@ const ProductDetails = () => {
     const formattedDate = new Date(dateString).toLocaleDateString(undefined, options);
     return formattedDate;
   };
+
+
 
   const truncateDescription = (description) => {
     const maxLength = 1000; // Độ dài tối đa của mô tả ngắn gọn
@@ -131,7 +134,7 @@ const ProductDetails = () => {
   // Function to get the cart items using Axios
   const getCartItems = async () => {
     try {
-      const response = await axios.get(`${apiDomain}/cart`);
+      const response = await axios.get(`${apiDomain}/cart/${user.id}`);
       setCartItems(response.data);
     } catch (error) {
       console.error("Error fetching cart items:", error);
@@ -144,26 +147,35 @@ const ProductDetails = () => {
 
   // handle add to cart
   const handleAddToCart = async () => {
-    const data = {
-      product_id: id,
-      quantity: itemCount,
-      price: totalPrice,
+
+    if (user) {
+
+
+      const data = {
+        product_id: id,
+        quantity: itemCount,
+        price: totalPrice,
+      }
+      try {
+        await axios.post(`${apiDomain}/cart/${user.id}`, data);
+        getCartItems();
+        toast.success(` Sản phẩm ${product.Name} đã được thêm vào giỏ hàng thành công!`, {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      } catch (error) {
+        console.error("Error adding item to cart:", error);
+      }
+    } else {
+      alert("Hãy đăng nhập rồi thực hiện mua sắm!")
     }
-    try {
-      await axios.post(`${apiDomain}/cart`, data);
-      getCartItems();
-      toast.success(` Sản phẩm ${product.Name} đã được thêm vào giỏ hàng thành công!`, {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
-    } catch (error) {
-      console.error("Error adding item to cart:", error);
-    }
+
+
   };
   //hiển thị đánh giá sao sản phẩm
   const renderStars = (stars) => {
@@ -203,18 +215,18 @@ const ProductDetails = () => {
           <div className="row product-row">
             <div className="col-12 col-md-8">
               <div className="product-img" id="product-img">
-                <img src={apiDomain + "/image/" + listImg[0]} alt="" />
+                <img src={listImg[0]} alt="" />
               </div>
               <div className="box ">
                 <div className="product-img-list">
                   <div className="product-img-item">
-                    <img src={apiDomain + "/image/" + listImg[1]} alt="" />
+                    <img src={listImg[1]} alt="" />
                   </div>
                   <div className="product-img-item">
-                    <img src={apiDomain + "/image/" + listImg[2]} alt="" />
+                    <img src={listImg[2]} alt="" />
                   </div>
                   <div className="product-img-item">
-                    <img src={apiDomain + "/image/" + listImg[3]} alt="" />
+                    <img src={listImg[3]} alt="" />
                   </div>
                 </div>
               </div>
@@ -228,6 +240,7 @@ const ProductDetails = () => {
                   <span className="product-info-detail-title">Loại sản phẩm:</span>
                   {product.Category}
                 </div>
+
                 <div className="product-info-detail">
                   <span className="product-info-detail-title">Đánh giá:</span>
                   <span className="rating">
@@ -243,26 +256,32 @@ const ProductDetails = () => {
 
                       <i className='bx bx-minus'></i>
                     </span> :
-                    <span className="product-quantity-btn bg-white" >
-
-
+                    <span className="product-quantity-btn">
+                      <i className='bx bx-minus'></i>
                     </span>
-
 
                   }
 
-                  <span className="product-quantity">{itemCount}</span>
+                  <span className="product-quantity">{product.Quantity === 0 ? 0 : itemCount}</span>
                   {itemCount < product.Quantity ?
 
                     <span className="product-quantity-btn" onClick={handleIncrement}>
                       <i className='bx bx-plus'></i>
                     </span> :
-                    <span className="product-quantity-btn bg-white" />
+                    <span className="product-quantity-btn" >
+                      <i className='bx bx-plus'></i>
+                    </span>
                   }
                   <span className="product-info-detail-title pl-2">    {product.Quantity} sản phẩm có sẵn</span>
                 </div>
                 <div>
-                  <button className="btn-flat btn-hover" onClick={() => handleAddToCart(product.ID)}>Thêm vào giỏ hàng</button>
+                  {product.Quantity === 0 ?
+                    <button className="btn-flat btn-hovers" >Hết Hàng</button>
+                    :
+                    <button className="btn-flat btn-hover" onClick={() => handleAddToCart(product.ID)}>Thêm vào giỏ hàng</button>
+
+                  }
+
                 </div>
               </div>
             </div>
@@ -281,9 +300,11 @@ const ProductDetails = () => {
 
               />
               {!showFullDescription ? (
-                <button className=' btn btn-primary ' onClick={() => setShowFullDescription(true)}>Xem thêm</button>
+                <button className=' h-[50px]  mt-2 absolute bottom-0 backdrop-blur-[2px] w-full' onClick={() => setShowFullDescription(true)}>
+                  <p className='w-[20%] center border-[2px] border-blue-500 text-blue-500 text-md'>Xem thêm <i className="bi bi-arrow-right-short mt-[10px] text-sm"></i></p>
+                </button>
               ) : (
-                <button className=' btn btn-primary ' onClick={() => setShowFullDescription(false)}>Thu gọn</button>
+                <button className=' btn btn-primary mt-2  bottom-0 backdrop-blur-[2px] w-full' onClick={() => setShowFullDescription(false)}>Thu gọn</button>
               )}
             </div>
 
@@ -363,8 +384,8 @@ const ProductDetails = () => {
                   </div>
                   <div className="flex-grow-1 ms-2 ms-sm-3">
                     <div className='flex'>
-                      <input className="form-control py-0 px-1 border-0 " placeholder="Start writing..." value={comment} onChange={(e) => setComment(e.target.value)} style={{ resize: "none", width: "80%" }}></input>
-                      <button className="btn btn-primary ml-2  w-[20%]" onClick={handleComment}>Nhập</button>
+                      <input className="form-control py-0 px-1 border-0 " placeholder="Start writing..." value={comment} onChange={(e) => setComment(e.target.value)} style={{ resize: "none", width: "93%" }}></input>
+                      <button className="btn btn-primary ml-2  w-[7%]" onClick={handleComment}><i className="bi bi-send-fill text-sm "></i></button>
                     </div>
 
                   </div>

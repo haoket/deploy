@@ -3,9 +3,10 @@ import { Link } from 'react-router-dom';
 import { apiDomain } from '../../../utils/utilsDomain';
 import { Context } from '../../../context/Context';
 import axios from 'axios';
-import './Profile.css'
+import './profile.css'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Suggest from '../product/Suggest';
 
 export const Profile = () => {
     const user = JSON.parse(localStorage.getItem('user'));
@@ -145,14 +146,14 @@ export const Profile = () => {
     }
 
     return (
-        <div className='px-10 lg:px-40'>
+        <div className='px-10 lg:px-40 lg:mt-[100px]'>
 
             <ToastContainer />
             <div>
                 <h1 className=' text-3xl mt-3'>
                     Quản lý tài khoản
                     <span
-                        className='text-red-600 text-[14px] cursor-pointer'
+                        className='text-red-600 text-[14px] ml-2 cursor-pointer'
                         onClick={() => setIsEditModalOpen(true)}
                     >
                         Chỉnh sửa
@@ -250,12 +251,12 @@ export const Profile = () => {
                 )}
                 {/* end modal chinh sua */}
 
-                <div className='flex flex-row justify-around gap-2'>
+                <div className='flex flex-col sm:flex-row  justify-around gap-2'>
 
 
 
 
-                    <div className='w-1/3 border bg-gray-100 p-4 '>
+                    <div className='sm:w-1/3 bg-gray-100 p-4 w-full rounded-md border-2 border-blue-300'>
                         <Link to='/change-password' className='text-blue hover:underline cursor-pointer'>Thay đổi mật khẩu</Link>
                         <h1 className='font-bold mt-4'>Thông tin cá nhân </h1>
                         <p>{nameUser}</p>
@@ -264,7 +265,7 @@ export const Profile = () => {
                             <p>{emailUser}</p>
                         </div>
                     </div>
-                    <div className='row-9 w-2/3  border-2 rounder-2xl   bg-gray-100 p-4'>
+                    <div className='row-9 sm:w-2/3 w-full border-2 rounder-2xl   bg-gray-100 p-4 rounded-md border-2 border-blue-300'>
                         <div className='flex  flex-col'>
                             <h1 className='font-bold'>Sổ địa chỉ: </h1>
                             <div>
@@ -279,12 +280,11 @@ export const Profile = () => {
                     </div>
                 </div>
             </div>
-            <hr />
             <div className='mt-10 '>
                 <h1 className='font-bold text-xl '>Đơn hàng gần đây</h1>
 
                 {Order && Order.map((item, index) => (
-                    <div className={`mt-10 relative ${detailOrder === item.ID ? 'active' : ''}`} key={index}>
+                    <div className={`mt-10 relative bg-gray-200 p-2 border rounded ${detailOrder === item.ID ? 'active' : ''}`} key={index}>
                         {detailOrder === item.ID && (
                             <div className={`mt-[150px] order-details ${detailOrder === item.ID ? 'active' : ''}`}>
                                 <div>
@@ -317,7 +317,7 @@ export const Profile = () => {
                                                 <tr>
                                                     <td>
                                                         <figure className="media">
-                                                            <div className="img-wrap"><img src={apiDomain + "/image/" + parseImageLink(product.img)} className="img-thumbnail img-sm" /></div>
+                                                            <div className="img-wrap"><img width={50} src={parseImageLink(product.img)} className="img-thumbnail " /></div>
                                                             <figcaption className="media-body">
                                                                 <h6 className="title text-truncate"> </h6>
                                                             </figcaption>
@@ -352,43 +352,62 @@ export const Profile = () => {
                             </div>
                         )}
                         <p scope="col" key={index}>
-                            Mã đơn hàng {item.ID}  <button className='border-2 px-2 rounded hover:bg-green-600' onClick={() => handleViewDetail(item)} >Xem chi tiết</button>
+                            Mã đơn hàng {item.ID}   <span className='text-red border-3 px-2 rounded border-red-400'> {item.Status === '0' ? "Đang xử lý" :
+                                item.Status === '1' ? "Đang giao" :
+                                    item.Status === '2' ? "Đã giao" :
+                                        "Đã hủy"
+                            }
+                            </span><button className='border-3 px-2 rounded border-blue-400 border bg-green-600 text-white hover:bg-blue-300' onClick={() => handleViewDetail(item)} >Xem chi tiết</button>
                         </p>
 
-                        <table className={`table table-hover shopping-cart-wrap ${detailOrder === item.ID ? 'active' : ''}`}>
-                            <thead className="text-muted">
-                                <tr>
-                                    <th scope="col">Sản phẩm</th>
-                                    <th scope="col">Số lượng</th>
-                                    <th scope="col">Giá</th>
-                                </tr>
-                            </thead>
-                            {item.products.map((product, index) => (
-                                <tbody key={index}>
+                        <div className='w-[97%] center p-2 '>
+                            <table className={`table table-hover shopping-cart-wrap rounded border  ${detailOrder === item.ID ? 'active' : ''}`}>
+                                <thead className="text-muted">
                                     <tr>
-                                        <td>
-                                            <figure className="media">
-                                                <div className="img-wrap"><img src={apiDomain + "/image/" + parseImageLink(product.img)} className="img-thumbnail img-sm" /></div>
-                                                <figcaption className="media-body">
-                                                    <h6 className="title text-truncate"> </h6>
-                                                </figcaption>
-                                            </figure>
-                                        </td>
-                                        <td>
-                                            <span>Số lượng:{product.Quantity}</span>
-                                        </td>
-                                        <td>
-                                            <div className="price-wrap">
-                                                <var className="price">{product.Price}.000VNĐ</var>
-                                            </div>
-                                        </td>
+                                        <th scope="col  "><p className='text-[10px]'>Sản phẩm</p></th>
+                                        <th scope="col"><p className='text-[10px]'>Số lượng</p></th>
+                                        <th scope="col"><p className='text-[10px]'>Giá</p></th>
                                     </tr>
-                                </tbody>
-                            ))}
-                        </table>
+                                </thead>
+                                {item.products.map((product, index) => (
+                                    <tbody key={index}>
+                                        <tr>
+                                            <td>
+                                                <figure className="media ">
+                                                    <div className="img-wrap">
+                                                        <div>
+                                                            <img width={50} src={parseImageLink(product.img)} className="img-thumbnail " />
+                                                        </div>
+                                                    </div>
+                                                    <figcaption className="media-body w-[100px] hidden sm:block">
+                                                        <h6 className="title text-truncate ">  {product.Name} </h6>
+                                                    </figcaption>
+                                                </figure>
+                                            </td>
+                                            <td>
+                                                <span>Số lượng:{product.Quantity}</span>
+                                            </td>
+                                            <td>
+                                                <div className="">
+                                                    <var className="center text-sm">{product.Price}.000VNĐ</var>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                ))}
+                            </table>
+                        </div>
                     </div>
                 ))}
+
+
+                {Order.length == 0 && <div className='flex justify-center flex-col py-2 pb-5'> <p className='text-center font-bold text-gray-400 text-[20px] py-10'>Bạn chưa mua sắm được sản phẩm ưng ý? Bắt đầu mua sắm nào! </p>
+                    <Link to={'/products'} className='center text-center border-2 px-2 bg-red-600 hover:bg-red-300 py-2 text-[20px] w-[20%] text-white rounded hover:bg-green-600'>Mua sắm ngay</Link>
+                </div>
+                }
+
             </div>
+            <Suggest />
         </div>
     );
 }

@@ -1,6 +1,6 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import React, { useEffect, useState } from "react";
-
+import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage';
 import { useForm, Controller } from "react-hook-form";
 import { getProductById, updateProduct, uploadImage, getCategory } from "../../../utils/apiCalls";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
@@ -16,6 +16,7 @@ const UpdateProductForm = () => {
     const [price, setPrice] = useState("");
     const [category, setCategory] = useState("");
     const [stars, setStars] = useState("");
+
     const [quantity, setQuantity] = useState("");
     const { product_id } = useParams()
     const navigate = useNavigate();
@@ -45,7 +46,9 @@ const UpdateProductForm = () => {
         setCategory(data.Category);
         setStars(data.Stars);
         setQuantity(data.Quantity);
+
         setSelectedImages(JSON.parse(data.ImageLink));
+
 
     }
 
@@ -73,8 +76,8 @@ const UpdateProductForm = () => {
             console.log("dataUpdate", dataUpdate);
             console.log('====================================');
             await updateProduct(dataUpdate, product_id);
-            alert("Blog updated successfully");
-            navigate("/admin/blog");
+            alert("Product updated successfully");
+            navigate("/products");
         } catch (error) {
             console.error("Error update product:", error);
         }
@@ -83,30 +86,34 @@ const UpdateProductForm = () => {
 
     };
     const handleImageSelect = async (e) => {
-        const files = e.target.files[0]; // Chọn tất cả các tệp đã chọn
+        const files = e.target.files[0];
 
         if (files) {
-
-            const formData = new FormData();
-            formData.append('ImageLink', files);
+            const storage = getStorage(); // Lấy đối tượng storage từ Firebase
+            const storageRef = ref(storage, `images/${files.name}`);
+            const uploadTask = uploadBytesResumable(storageRef, files);
 
             try {
-                // Gửi hình ảnh lên server
-                const response = await uploadImage(formData);
+                uploadTask.on('state_changed', (snapshot) => {
+                    // Quá trình tải lên, bạn có thể theo dõi tiến trình tại đây nếu cần
+                }, (error) => {
+                    console.error('Lỗi khi tải lên hình ảnh:', error);
+                }, async () => {
+                    // Khi tải lên thành công, lấy URL của ảnh
+                    const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+                    console.log('URL hình ảnh:', downloadURL);
 
-                const uploadedImageName = response.fileName;
-
-                // Cập nhật danh sách hình ảnh
-                setSelectedImages([...selectedImages, uploadedImageName]);
-
+                    // Cập nhật danh sách hình ảnh
+                    setSelectedImages([...selectedImages, downloadURL]);
+                });
             } catch (error) {
-                console.error('Lỗi khi tải lên hình ảnh: ', error);
+                console.error('Lỗi khi tải lên hình ảnh:', error);
             }
         }
-        console.log('====================================');
-        console.log("selectedImages", selectedImages);
-        console.log('====================================');
     };
+
+
+
 
     const handleRemoveImage = (imageIndex) => {
         const newSelectedImages = [...selectedImages];
@@ -223,7 +230,7 @@ const UpdateProductForm = () => {
                     className="block text-gray-700 text-sm font-bold mb-2  flex flex-col"
                     htmlFor="imageLink"
                 >
-                    Image Link
+                    Hình ảnh
 
 
                     <div className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded w-20 flex " >Chọn hình ảnh </div>
@@ -242,7 +249,7 @@ const UpdateProductForm = () => {
                         <div className="flex">
                             {selectedImages.map((image, index) => (
                                 <div key={index} className="m-1 relative">
-                                    <img src={apiDomain + "/image/" + image} width={100} height={100} alt={`Ảnh ${index}`} />
+                                    <img src={image} width={100} height={100} alt={`Ảnh ${index}`} />
                                     <button
                                         className="bg-red-500 hover-bg-red-700 text-white font-bold py-1 px-2 rounded absolute top-0 right-0"
                                         onClick={() => handleRemoveImage(index)}

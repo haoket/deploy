@@ -229,12 +229,17 @@ body {
 		padding-left: 1rem;
 
 		.menu-item {
+
+
 			.menu-link {
 				justify-content: flex-start;
+
 
 				.menu-link-text {
 					display: inline;
 				}
+
+
 
 
 			}
@@ -242,6 +247,8 @@ body {
 			.active {
 				background-color: rgb(162, 159, 159);
 				border-radius: 10px;
+
+
 			}
 
 		}

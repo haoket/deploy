@@ -12,7 +12,6 @@ import 'react-quill/dist/quill.snow.css';
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage';
 import { firebaseConnect } from '../../../utils/firebase';
 
-
 const ProductForm = () => {
     const [selectedImages, setSelectedImages] = useState([]);
     const [name, setName] = useState("");
@@ -50,7 +49,6 @@ const ProductForm = () => {
             }
         }
     };
-
     const handleRemoveImage = (imageIndex) => {
         const newSelectedImages = [...selectedImages];
         newSelectedImages.splice(imageIndex, 1);

@@ -9,7 +9,7 @@ import {
 } from '../controllers/cartController.js';
 
 const cartRoutes = (app) => {
-  app.route('/cart')
+  app.route('/cart/:id')
     .get(getCart)
     .post(createCart);
 
@@ -19,7 +19,7 @@ const cartRoutes = (app) => {
     .delete(deleteCart);
 
 
-  app.route('/delete-cart').delete(deleteAllCart);
+  app.route('/delete-cart/:id').delete(deleteAllCart);
 };
 
 export default cartRoutes;

@@ -14,16 +14,46 @@ import '../../css/grid.css'
 
 
 const Navbar = React.memo(() => {
-  const { cartItems } = useContext(Context);
+  const { cartItems, setCartItems: updateItemsCount } = useContext(Context);
   const [itemSearch, setItemSearch] = useState('');
   const [isActive, setIsActive] = useState(true);
   const [classActive, setClassActive] = useState('');
+  const [item, setItems] = useState([]);
+
+  const [user, setUser] = useState({});
+
+
+  const getUser = () => {
+    setUser(JSON.parse(localStorage.getItem('user')));
+    console.log('====================================');
+    console.log("user", user);
+    console.log('====================================');
+  }
   const handleLogout = () => {
     localStorage.removeItem('user');
+    updateItemsCount([]);
+    getUser();
 
-    window.location.href = '/auth/login';
+
+    // window.location.href = '/auth/login';
   };
 
+
+  // const getCartItems = async () => {
+  //   try {
+  //     const response = await axios.get(`${apiDomain}/cart/${user.id}`);
+  //     updateItemsCount(response.data)
+  //   } catch (error) {
+  //     console.error("Error fetching cart items:", error);
+  //   }
+  // };
+
+
+
+  useEffect(() => {
+    // getCartItems();
+    getUser();
+  }, []);
 
   const handleDisplayMenu = () => {
     if (isActive) {
@@ -34,11 +64,11 @@ const Navbar = React.memo(() => {
       setIsActive(true);
     }
   }
-  const user = JSON.parse(localStorage.getItem('user'));
+
   return (
     <>
       {/* <!-- header -->/ */}
-      <header className='fixed-top'>
+      <header className='fixed-top '>
         {/* <!-- mobile menu --> */}
         <div className="mobile-menu bg-second" >
           <Link to='/' className="mb-logo">Beauty</Link>
@@ -69,7 +99,7 @@ const Navbar = React.memo(() => {
           {/* <!-- end top header --> */}
           {/* <!-- mid header --> */}
           <div className="bg-main">
-            <div className="mid-header container p-[-10px]">
+            <div className="mid-header  container p-[-10px]">
               <Link to="/" className="logo" onClick={handleDisplayMenu}>Beauty</Link>
               <div className="search">
                 <input type="text" placeholder="Tìm kiếm..." onChange={(e) => setItemSearch(e.target.value)} />
@@ -81,16 +111,20 @@ const Navbar = React.memo(() => {
               </div>
               <ul className="user-menu gap-10">
                 <NavLink to="/cart" className="relative  flex items-center  " onClick={handleDisplayMenu}>
-                  <FaShoppingBag style={{ fontSize: "2rem" }} />
+                  <FaShoppingBag style={{ fontSize: "1.5rem" }} />
 
                   {cartItems.length > 0 && (
-                    <span className="notification-badge text-[#f42c37] w-6 h-6 flex items-center justify-center font-bold text-xl absolute top-0 right-0 mr-[-10px] rounded-full border-red-500 border-1">{cartItems.length}</span>
+
+
+                    <span className="notification-badge text-[#f42c37] w-6 h-6 flex items-center justify-center font-bold text-xl absolute top-0 right-0 mr-[-10px] rounded-full border-red-500 border-1">
+                      {user ? cartItems.length : 0}
+                    </span>
                   )}
                 </NavLink>
                 <div>
-                  {user && (
+                  {user ? (
                     <>
-                      <Link to="/profile " onClick={handleDisplayMenu}>
+                      <Link to="/profile " onClick={handleDisplayMenu} className='flex flex-row'>
                         <div className='flex justify-center flex-col items-center'>
                           {/* <img src={apiDomain + "/image/" + user.img} alt="" className='rounded-full  h-10' /> */}
                           <h1 className='text-[15px] flex justify-center items-center mr-2'>Tài khoản: {user.name}</h1>
@@ -101,6 +135,13 @@ const Navbar = React.memo(() => {
                         Đăng xuất
                       </button>
                     </>
+                  ) : (
+                    <Link to={'/auth/login'}>
+                      <button className="btn text-[10px] border border-[#f42c37] hover:bg-[#f42c37]" onClick={handleLogout} >
+
+                        Đăng nhập
+                      </button>
+                    </Link>
                   )}
                 </div>
 

@@ -41,43 +41,41 @@ const BlogHome = () => {
                 {/* <!-- blogs --> */}
 
 
-                <div className="section">
+                <div className="section mt-[-200px]">
                     <div className="container">
                         <div className="section-header">
                             <h2>Bài viết mới</h2>
                         </div>
 
-                        <div className="blog" >
-                            <div className="blog-img">
-                                <img src={apiDomain + "/image/" + data[0]?.img} alt="" />
+                        <div className=" flex p-2" >
+                            <div className="">
+                                < img src={apiDomain + "/image/" + data[0]?.img} alt="" />
                             </div>
-                            <div className="blog-info">
-                                <div className="blog-title">
-                                    {data[0]?.title}
+                            <div className=" flex align-center flex-col justify-center p-2">
+                                <div >
+                                    <h1 className=" font-bold sm:text-lg md:text-[25px] md:p-10"> {data[0]?.title}</h1>
                                 </div>
-                                <div className="blog-preview">
 
-                                </div>
-                                <Link to={`/blog/${data[0]?.id}`} className="btn-flat btn-hover">Đọc thêm</Link>
+                                <Link to={`/blog/${data[0]?.id}`} className="btn-flat btn-hover flex justify-center rounded"><p className='text-center'>Đọc thêm</p></Link>
                             </div>
                         </div>
 
 
-                        <div className="blog row-revere">
-                            <div className="blog-img">
-                                <img src={apiDomain + "/image/" + data[1]?.img} alt="" />
+                        <div className=" flex row-revere p-2" >
+                            <div >
+                                < img className="rounded" src={apiDomain + "/image/" + data[1]?.img} alt="" />
                             </div>
-                            <div className="blog-info">
-                                <div className="blog-title">
-                                    {data[1]?.title}
+                            <div className=" flex align-center flex-col justify-center p-2">
+                                <div >
+                                    <h1 className=" font-bold sm:text-lg md:text-[25px] md:p-10"> {data[1]?.title}</h1>
                                 </div>
-                                <div className="blog-preview">
-                                </div>
-                                <Link to={`/blog/${data[1]?.id}`} className="btn-flat btn-hover">Đọc thêm</Link>
+
+                                <Link to={`/blog/${data[0]?.id}`} className="btn-flat btn-hover flex justify-center rounded"><p className='text-center'>Đọc thêm</p></Link>
                             </div>
                         </div>
-                        <div className="section-footer">
-                            <Link to='/blog' className="btn-flat btn-hover">Xem tất cả</Link>
+
+                        <div className=" center flex justify-center">
+                            <Link to='/blog' className="btn-flat btn-hover rounded">Xem tất cả</Link>
 
                         </div>
                     </div>

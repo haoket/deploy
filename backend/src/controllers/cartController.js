@@ -5,9 +5,10 @@ const dbConnection = createDatabaseConnection();
 
 // Get all cart items
 export const getCart = (req, res) => {
-  const query = 'SELECT * FROM cart c INNER JOIN products p ON c.product_id = p.ID';
+  const userId = req.params.id;
+  const query = 'SELECT * FROM cart c INNER JOIN Products p ON c.product_id = p.ID WHERE c.user_id = ?';
 
-  dbConnection.query(query, (error, results) => {
+  dbConnection.query(query, [userId], (error, results) => {
     if (error) {
       console.error('Lỗi khi lấy danh sách các sản phẩm trong giỏ hàng:', error);
       res.status(500).json({ error: 'Lỗi khi lấy danh sách các sản phẩm trong giỏ hàng' });
@@ -37,51 +38,23 @@ export const getCartById = (req, res) => {
 };
 
 
-// export const getProductsByCategory = async (req, res) => {
-//   const productSlug = req.params.slug;
-
-//   // Tìm tên danh mục (category) bằng slug
-//   dbConnection.query('SELECT Name FROM categories WHERE slug = ?', [productSlug], (error, categoryResults) => {
-//     if (error) {
-//       console.error('Lỗi khi truy vấn cơ sở dữ liệu:', error);
-//       res.status(500).json({ error: 'Lỗi khi lấy thông tin danh mục' });
-//     } else {
-//       if (categoryResults.length === 0) {
-//         res.status(404).json({ message: 'Danh mục không được tìm thấy' });
-//         return;
-//       }
-
-//       const categoryName = categoryResults[0].Name;
-
-//       // Tìm danh sách sản phẩm bằng tên danh mục
-//       dbConnection.query('SELECT * FROM products WHERE category = ?', [categoryName], (error, productResults) => {
-//         if (error) {
-//           console.error('Lỗi khi truy vấn cơ sở dữ liệu:', error);
-//           res.status(500).json({ error: 'Lỗi khi lấy thông tin sản phẩm' });
-//         } else {
-
-//           res.status(200).json(productResults);
-
-//         }
-//       });
-//     }
-//   });
-// };
-
-// Create a new cart item
 export const createCart = (req, res) => {
+  const userId = req.params.id;
   const { product_id, quantity, price } = req.body;
+  console.log('====================================');
+  console.log(req.body);
+  console.log('====================================');
   //   // Tìm tên danh mục (category) bằng slug
-  dbConnection.query('SELECT * FROM cart WHERE product_id = ?', [product_id], (error, categoryResults) => {
+  dbConnection.query('SELECT * FROM cart WHERE product_id = ? AND user_id = ?', [product_id, userId], (error, categoryResults) => {
     if (error) {
       console.error('Lỗi khi truy vấn cơ sở dữ liệu:', error);
       res.status(500).json({ error: 'Lỗi khi lấy thông tin giỏ hàng' });
     } else {
       if (categoryResults.length === 0) {
 
-        const query = 'INSERT INTO cart ( product_id, quantity, price) VALUES ( ?, ?,?)';
+        const query = 'INSERT INTO cart ( product_id, user_id, quantity, price) VALUES ( ?,?, ?,?)';
 
-        dbConnection.query(query, [product_id, quantity, price], (error) => {
+        dbConnection.query(query, [product_id, userId, quantity, price], (error) => {
           if (error) {
             console.error('Lỗi khi tạo sản phẩm trong giỏ hàng:', error);
             res.status(500).json({ error: 'Lỗi khi tạo sản phẩm trong giỏ hàng' });
@@ -92,7 +65,7 @@ export const createCart = (req, res) => {
 
         return;
       } else {
-        const query = 'UPDATE cart SET price = ?, quantity = ? WHERE cart_id = ?';
+        const query = 'UPDATE cart SET price = ?, quantity = ? WHERE cart_id = ? ';
         const newPrice = price + categoryResults[0].price;
         const newQuantity = categoryResults[0].quantity + quantity;
 
@@ -150,9 +123,10 @@ export const deleteCart = (req, res) => {
   });
 };
 export const deleteAllCart = (req, res) => {
-  const query = 'DELETE FROM cart';
+  const userId = req.params.id;
+  const query = 'DELETE FROM cart where user_id = ?';
 
-  dbConnection.query(query, (error, result) => {
+  dbConnection.query(query, [userId], (error, result) => {
     if (error) {
       console.error('Lỗi khi xóa sản phẩm trong giỏ hàng:', error);
       res.status(500).json({ error: 'Lỗi khi xóa sản phẩm trong giỏ hàng' });

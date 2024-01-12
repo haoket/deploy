@@ -29,7 +29,7 @@ export const Register = async (req, res) => {
       }
 
       // Thay đổi câu lệnh SQL để phù hợp với MySQL
-      const insertUserQuery = `INSERT INTO users (name, address, phone, password, email, created_at, role) VALUES (?, ?, ?,?,?,?,?)`;
+      const insertUserQuery = `INSERT INTO Users (name, address, phone, password, email, created_at, role) VALUES (?, ?, ?,?,?,?,?)`;
       dbConnection.query(insertUserQuery, [name, address, phone, hashedPassword, email, created_at, role], (error, results) => {
         if (error) {
           console.error('Lỗi khi thêm người dùng:', error);
@@ -62,7 +62,7 @@ export const login = async (req, res) => {
       }
 
 
-      const selectUserQuery = `SELECT * FROM users WHERE email = ?`;
+      const selectUserQuery = `SELECT * FROM Users WHERE email = ?`;
 
       dbConnection.query(selectUserQuery, [email], (error, results) => {
 
@@ -71,14 +71,11 @@ export const login = async (req, res) => {
           res.status(500).json({ error: 'Lỗi khi truy vấn người dùng' });
         } else {
           const user = results[0];
-          console.log('====================================');
-          console.log(user.password);
-          console.log('====================================');
           if (!user) {
-            res.status(401).json({ error: 'Xác thực thất bại. Sai thông tin đăng nhập.' });
+            res.status(401).json({ error: 'Email không tồn tại!' });
           } else {
             if (!bcrypt.compareSync(password, user.password)) {
-              res.status(401).json({ error: 'Xác thực thất bại. Sai thông tin đăng nhập.' });
+              res.status(401).json({ error: 'Sai mật khẩu' });
             } else {
               // Đúng thông tin đăng nhập, tạo và gửi token JWT ở đây
               const token = `JWT ${jwt.sign({ email: user.email }, 'judicious')}`;
