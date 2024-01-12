@@ -63,6 +63,11 @@ const Navbar = React.memo(() => {
       setClassActive('header-wrapper active');
       setIsActive(true);
     }
+
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth', // Nếu bạn muốn có hiệu ứng cuộn mượt
+    });
   }
 
   return (
