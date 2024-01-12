@@ -6,7 +6,7 @@ const dbConnection = createDatabaseConnection();
 // Get all cart items
 export const getCart = (req, res) => {
   const userId = req.params.id;
-  const query = 'SELECT * FROM cart c INNER JOIN Products p ON c.product_id = p.ID WHERE c.user_id = ?';
+  const query = 'SELECT * FROM cart c INNER JOIN products p ON c.product_id = p.ID WHERE c.user_id = ?';
 
   dbConnection.query(query, [userId], (error, results) => {
     if (error) {

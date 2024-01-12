@@ -150,7 +150,6 @@ const ProductDetails = () => {
 
     if (user) {
 
-
       const data = {
         product_id: id,
         quantity: itemCount,
