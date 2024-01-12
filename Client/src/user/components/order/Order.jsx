@@ -345,4 +345,3 @@ export const Order = () => {
         </div>
     )
 }
-s
